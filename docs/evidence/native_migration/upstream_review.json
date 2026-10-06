@@ -1,0 +1,78 @@
+{
+  "reviewed_at_utc": "2026-10-06T05:03:58.902853+00:00",
+  "reviewer": "fix_protocol_conditions independent review",
+  "scope": "Pinned source download, direct patch replay, comparison to did_q01 remote working files. No training or full native execution.",
+  "lightningdit": {
+    "pin": "f315f25b6aaad600b4d8e50a8167ce06f2e957f3",
+    "direct_original_patch_check": "PASS",
+    "direct_original_patch_apply": "PASS",
+    "patch_sha256": "4d02f63428b4b170bf6763efcaa2841d41f4725243d8bc0a1aad5adb7daeca3e",
+    "crlf_lines": 0,
+    "files": {
+      "datasets/img_latent_dataset.py": {
+        "patched_sha256": "636cad9796a5d6e5d31af631bc69631886ff0a9c2e84d74173ca1dea8b5f8c0d",
+        "did_q01_sha256": "8e30649ab48eeb90d6dbcef4f1ad1b52526870c0db12844a318a199a0e1eecb9",
+        "diff": [
+          "--- \n",
+          "+++ \n",
+          "@@ -91 +91 @@\n",
+          "-        \"did_q01/configs/imagenet_sr95_whitelist.json\"",
+          "+        \"\"",
+          "@@ -324 +324 @@\n",
+          "-        \"did_q01/configs/imagenet_sr95_whitelist.json\"",
+          "+        \"\"",
+          "@@ -329 +329 @@\n",
+          "-        root: str = \"DATA/imagenet/train\",",
+          "+        root: str = \"\","
+        ]
+      },
+      "models/lightningdit.py": {
+        "patched_sha256": "c920bbf26974937006edc0276f0934e2064d1e0998037a3a3040a6acdb5e4aeb",
+        "did_q01_sha256": "e7aec245528e6a318fd0ea2775546b217c4446711a16691c743db5f1ea936f6b",
+        "diff": []
+      },
+      "transport/__init__.py": {
+        "patched_sha256": "7324d580b270d8d79839affd6c5c949550faff534ddb47789085f442c867988d",
+        "did_q01_sha256": "95ab9901105e75f2bfb39be000481f5dba70ea467a3ac1de8d86794dadc0addf",
+        "diff": []
+      },
+      "transport/transport.py": {
+        "patched_sha256": "ed30b392603ff7575f2b55ed07c56cf1cc113b53c94ddaafc85ce49970e696b9",
+        "did_q01_sha256": "7479b5b86689dacb0e6cbd2b00495817a2cb7166dabdae3b7d828953fb629386",
+        "diff": []
+      }
+    },
+    "scientific_difference": "None. Dataset has three private path defaults replaced by empty strings; model and transport are text-identical to did_q01."
+  },
+  "rae": {
+    "pin": "a4d18c4db766419cbe7cb8c02cd9f7ceb0ec9041",
+    "files": {
+      "src/stage2/models/DDT.py": {
+        "pinned_official_sha256": "08c741f4870bb53744a43ac623b1497db097cb1dabecb00d0a64bc588651015a",
+        "matches_audited_working_identity": true
+      },
+      "src/stage2/transport/__init__.py": {
+        "pinned_official_sha256": "419f160c85ac8ecf786117be77615ecba9e51f2ba0a555ab1ebc5f4e82a958db",
+        "matches_audited_working_identity": true
+      },
+      "src/stage2/transport/transport.py": {
+        "pinned_official_sha256": "e77e0b0012ff18a74d90c570c837c4fefe4d016fed85681e7e86bd17c64e09a3",
+        "matches_audited_working_identity": true
+      },
+      "src/stage1/rae.py": {
+        "pinned_official_sha256": "6564d285518c8a80cac7cf54fb4eb116181c298fea349d48ad0fb14ffc0239d9",
+        "matches_audited_working_identity": true
+      },
+      "src/stage1/encoders/dinov2.py": {
+        "pinned_official_sha256": "7bb854b243126dedc1d0988c8341b9ed69e4f20472d207d8e76f2ede7a90fbad",
+        "matches_audited_working_identity": true
+      }
+    },
+    "large_model_encoding": "Actual did_q01 FiLM uses online stage1, not compressed-label SR95 cache. Removed obsolete RAE cache entry."
+  },
+  "limitations": [
+    "Patch replay and interface coverage do not establish full training execution or Bayes convergence.",
+    "RAE legacy GENIUS cache and official encoder numerical equality was not established; attempted comparison failed at custom dependency import. The obsolete cache entry has been removed.",
+    "Retained dataset compressed-label heuristic is inherited historical behavior, not proof that arbitrary newly supplied caches have canonical labels."
+  ]
+}

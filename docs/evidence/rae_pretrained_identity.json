@@ -1,0 +1,11 @@
+{
+  "representation": "rae",
+  "repo_id": "nyu-visionx/RAE-collections",
+  "revision": "1be4f03273523431f099a934da4cf1940dc6039f",
+  "filename": "DiTs/Dinov2/wReg_base/ImageNet256/DiTDH-XL/stage2_model.pt",
+  "bytes": 3355251584,
+  "sha256": "fa5e0b0d4b1977a59908a87ec4c3c8a67ba2372f570028924fac24850f9458ed",
+  "historical_config": "did_q01/configs/m06_rae_warmup_prod.yaml",
+  "verification": "SHA256 computed on the actual historical remote checkpoint equals official Hugging Face LFS SHA256; no checkpoint download performed",
+  "matches": true
+}

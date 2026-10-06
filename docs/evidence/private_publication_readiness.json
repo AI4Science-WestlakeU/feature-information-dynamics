@@ -1,0 +1,28 @@
+{
+  "ready_for_private_code_publication": true,
+  "github_repo": "AI4Science-WestlakeU/feature-information-dynamics",
+  "visibility": "private",
+  "git_commit_status": "pending explicit approval",
+  "release_tree": "clean current snapshot; no old Git history or ignored archives",
+  "checks": {
+    "isolated_snapshot_tests": 45,
+    "test_seconds": 20.016,
+    "wheel_build": true,
+    "wheel_outside_source_import": true,
+    "wheel_sha256": "55effe2d57928debe018d1cd3cab52c9c1d7f967e372a677a7d6afe53fce71d3",
+    "staged_asset_hashes_match": 76,
+    "staged_notebook_download_identical": true,
+    "broken_markdown_links": 0,
+    "known_credential_pattern_matches": 0
+  },
+  "fixes": [
+    "remove unused research-host import fallback",
+    "use portable paths in asset manifest",
+    "preserve canonical LF notebook and hashed text assets"
+  ],
+  "limits": [
+    "full production model training not repeated",
+    "VAVAE upload continues independently; refer to dataset page for availability"
+  ],
+  "dataset_url": "https://huggingface.co/datasets/AI4Science-WestlakeU/feature-information-dynamics"
+}

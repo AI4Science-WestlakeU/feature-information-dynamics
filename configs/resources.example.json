@@ -1,0 +1,77 @@
+{
+  "imagenet_train": "/data/imagenet/train",
+  "pixel": {
+    "resources.jit_source": "/opt/JiT",
+    "ckpt_path": "/models/JiT/checkpoint-last.pth",
+    "stages": {
+      "warmup": {
+        "train.weight_init": "/models/JiT/checkpoint-last.pth",
+        "train.output_dir": "/path/to/runs/pixel_warmup"
+      },
+      "mask": {
+        "train.weight_init": "/path/to/runs/pixel_warmup/m06_pixel_warmup_prod/checkpoints/best.pt",
+        "train.output_dir": "/path/to/runs/pixel_mask"
+      },
+      "canny": {
+        "train.weight_init": "/path/to/runs/pixel_mask/m06_pixel_mask_prod/checkpoints/best.pt",
+        "train.output_dir": "/path/to/runs/pixel_canny"
+      }
+    }
+  },
+  "sdvae": {
+    "upstream_source": "/opt/SiT",
+    "ckpt_path": "/models/SiT-XL-2-256.pt",
+    "data.vae_path": "/models/sd-vae-ft-ema",
+    "stages": {
+      "warmup": {
+        "train.weight_init": "/models/SiT-XL-2-256.pt",
+        "train.output_dir": "/path/to/runs/sdvae_warmup"
+      },
+      "mask": {
+        "train.weight_init": "/path/to/runs/sdvae_warmup/m06_sdvae_warmup_prod/checkpoints/best.pt",
+        "train.output_dir": "/path/to/runs/sdvae_mask"
+      },
+      "canny": {
+        "train.weight_init": "/path/to/runs/sdvae_mask/m06_sdvae_mask_prod/checkpoints/best.pt",
+        "train.output_dir": "/path/to/runs/sdvae_canny"
+      }
+    }
+  },
+  "rae": {
+    "upstream_source": "/opt/RAE",
+    "ckpt_path": "/models/RAE/stage2_model.pt",
+    "model.rae_config_yaml": "/path/to/edited/rae/model.yaml",
+    "stages": {
+      "warmup": {
+        "train.weight_init": "/models/RAE/stage2_model.pt",
+        "train.output_dir": "/path/to/runs/rae_warmup"
+      },
+      "mask": {
+        "train.weight_init": "/path/to/runs/rae_warmup/m06_rae_warmup_prod/checkpoints/best.pt",
+        "train.output_dir": "/path/to/runs/rae_mask"
+      },
+      "canny": {
+        "train.weight_init": "/path/to/runs/rae_mask/m06_rae_mask_prod/checkpoints/best.pt",
+        "train.output_dir": "/path/to/runs/rae_canny"
+      }
+    }
+  },
+  "vavae": {
+    "upstream_source": "/opt/LightningDiT",
+    "ckpt_path": "/models/lightningdit-xl-imagenet256-800ep.pt",
+    "stages": {
+      "warmup": {
+        "train.weight_init": "/models/lightningdit-xl-imagenet256-800ep.pt",
+        "train.output_dir": "/path/to/runs/vavae_warmup"
+      },
+      "mask": {
+        "train.weight_init": "/path/to/runs/vavae_warmup/m06_vavae_warmup_prod/checkpoints/best.pt",
+        "train.output_dir": "/path/to/runs/vavae_mask"
+      },
+      "canny": {
+        "train.weight_init": "/path/to/runs/vavae_mask/m06_vavae_mask_prod/checkpoints/best.pt",
+        "train.output_dir": "/path/to/runs/vavae_canny"
+      }
+    }
+  }
+}

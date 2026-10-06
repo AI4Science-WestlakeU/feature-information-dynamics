@@ -1,0 +1,27 @@
+{
+  "train_m06_upstream_rae_film_advanced": {
+    "source_sha256": "0300dd1872468fd7100bb191c8b81f8413917ca09489bfe08937a453722fbc09",
+    "function_count": 11,
+    "mismatched_functions": [],
+    "matched": true
+  },
+  "train_m06_upstream_sdvae_online_film_advanced": {
+    "source_sha256": "d3c2badc933d68dd826b66dd30f6d384893c1ec05a2b1c17be16fd2d30e6da2a",
+    "function_count": 10,
+    "mismatched_functions": [],
+    "matched": true,
+    "source_note": "Updated do_train from remote actual source: numeric-only resume, optimizer/step/epoch/best-state restoration retained."
+  },
+  "train_m06_upstream_sdvae_film_advanced": {
+    "source_sha256": "16791451c34da48157caf29c3b4fef04ec621f3ebfe33e1034a7b3b520ff5c02",
+    "function_count": 9,
+    "mismatched_functions": [],
+    "matched": true
+  },
+  "train_m06_upstream_film_advanced": {
+    "source_sha256": "ee188124b62d4eb526f27c1146b464b74595031ab898d82c5fe64c15922f8354",
+    "function_count": 9,
+    "mismatched_functions": [],
+    "matched": true
+  }
+}

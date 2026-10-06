@@ -1,0 +1,6 @@
+* text=auto eol=lf
+*.npy -text
+*.png -text
+*.pt -text
+*.tar -text
+*.patch text eol=lf

@@ -1,0 +1,61 @@
+{
+  "checks": [
+    {
+      "representation": "pixel",
+      "action": "train",
+      "returncode": 0,
+      "stderr_tail": ""
+    },
+    {
+      "representation": "pixel",
+      "action": "eval",
+      "returncode": 0,
+      "stderr_tail": ""
+    },
+    {
+      "representation": "rae",
+      "action": "train",
+      "returncode": 0,
+      "stderr_tail": ""
+    },
+    {
+      "representation": "rae",
+      "action": "eval",
+      "returncode": 0,
+      "stderr_tail": ""
+    },
+    {
+      "representation": "sdvae",
+      "action": "train",
+      "returncode": 0,
+      "stderr_tail": ""
+    },
+    {
+      "representation": "sdvae",
+      "action": "eval",
+      "returncode": 0,
+      "stderr_tail": ""
+    },
+    {
+      "representation": "vavae",
+      "action": "train",
+      "returncode": 0,
+      "stderr_tail": ""
+    },
+    {
+      "representation": "vavae",
+      "action": "eval",
+      "returncode": 0,
+      "stderr_tail": ""
+    },
+    {
+      "representation": "vavae",
+      "action": "cache",
+      "returncode": 0,
+      "stderr_tail": ""
+    }
+  ],
+  "passed": true,
+  "torch_environment": "rae24",
+  "scope": "CLI/imports only; no training"
+}

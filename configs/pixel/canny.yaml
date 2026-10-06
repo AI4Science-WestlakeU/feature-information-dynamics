@@ -1,0 +1,50 @@
+# Historical executed recipe; replace resource paths, retain scientific settings.
+resources:
+  jit_source: YOUR_PATH/JiT
+
+# Pixel/JiT-L/16 Canny stage: initialized from the preceding mask checkpoint.
+# phase=canny_mask: both spatial adapters remain trainable and both inputs are active.
+
+ckpt_path: "YOUR_PATH/jit/checkpoint-last.pth"
+
+data:
+  data_path: "YOUR_PATH/imagenet"
+  fid_reference_file: 'path/to/your/VIRTUAL_imagenet256_labeled.npz'
+  image_size: 256
+  num_classes: 1000  # JiT LabelEmbedder always +1 → 1001 slots (matches paper ckpt)
+  num_workers: 8
+  paired_train_whitelist: "YOUR_PATH/paired_train_whitelist.json"
+  paired_val_whitelist: "YOUR_PATH/paired_val_whitelist.json"
+  mask_shard_dir: "YOUR_PATH/mask_shards"
+  canny_shard_dir: "YOUR_PATH/canny_shards"
+  phase: "canny_mask"  # Both spatial conditions remain active in the historical chain.
+
+model:
+  class_dropout_prob: 0.0  # Keep class conditioning active throughout this chain stage.
+  use_checkpoint: false
+
+train:
+  max_steps: 64200
+  global_batch_size: 1024
+  global_seed: 0
+  output_dir: "runs/pixel_canny"
+  exp_name: "m06_pixel_canny_prod"
+  ckpt: null
+  weight_init: "YOUR_PATH/pixel_mask/checkpoints/best.pt"
+  log_every: 100
+  val_seed: 12345
+  val_n_batches: 8
+  val_every_n_epochs: 3
+  early_stop_patience: 8
+  early_stop_min_epochs: 15
+
+optimizer:
+  lr: 0.0001
+  beta2: 0.95
+
+transport:
+  path_type: Linear
+  prediction: velocity
+  loss_weight: null
+  sample_eps: null
+  train_eps: null

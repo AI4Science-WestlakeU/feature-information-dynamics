@@ -1,0 +1,43 @@
+{
+  "status": "publication_in_progress",
+  "repo_id": "AI4Science-WestlakeU/feature-information-dynamics",
+  "dataset_url": "https://huggingface.co/datasets/AI4Science-WestlakeU/feature-information-dynamics",
+  "collection_url": "https://huggingface.co/collections/AI4Science-WestlakeU/feature-information-dynamics-6ac4bfa34224063cb603a7dc",
+  "collection_contains_dataset": true,
+  "components": {
+    "common": {
+      "files": 196,
+      "download_bytes": 3344352304,
+      "installed_bytes": 85089831558,
+      "published": true
+    },
+    "vavae": {
+      "files": 129,
+      "download_bytes": 39500888780,
+      "installed_bytes": 42548211383
+    }
+  },
+  "split": {
+    "train": 547448,
+    "val": 66685,
+    "unique": 614133,
+    "correction": "Remove validation occurrence of the historical single overlap; retain training occurrence"
+  },
+  "invalid_mask_sentinels": 980,
+  "source_server_upload": true,
+  "large_data_transferred_to_windows": false,
+  "transport": "gzip, conventional LFS through existing source-server proxy",
+  "publication_strategy": "Preupload remaining payloads, batch repository commit, verify remote identities, publish manifest last",
+  "pending": [
+    "Complete VAVAE upload",
+    "Verify remote payload identities and publish combined manifest/card"
+  ],
+  "tests": {
+    "full_suite_passed": 45,
+    "focused_publisher_passed_after_batch_change": 7
+  },
+  "common_public_download_passed": true,
+  "common_public_download_receipt": "huggingface_common_download.json",
+  "further_download_verification": "cancelled by user; check code execution and existing data instead",
+  "local_run_checks": "local_run_checks.json"
+}

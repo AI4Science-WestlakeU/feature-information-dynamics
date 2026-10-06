@@ -1,0 +1,11 @@
+{
+  "representation": "pixel",
+  "model": "JiT-L/16, 256x256",
+  "url": "https://www.dropbox.com/scl/fo/3ken1avtsd81ip67b9qpi/AGEqmJoyiacjYKSG_DnOX-c/jit-l-16/checkpoint-last.pth?rlkey=14gjrblmljewpl6ygxzlr3njm&dl=1",
+  "bytes": 5510063042,
+  "historical_checkpoint_sha256": "5daaffa1eb733c55518eac10b609483f9e0ff454a065947c98a8685459852de7",
+  "url_check": "HTTP 206, bytes 0-15/5510063042, application/binary, ZIP header 504b0304",
+  "historical_check": "Computed SHA256 and byte count on actual remote initialization checkpoint",
+  "full_upstream_file_redownloaded": false,
+  "download_behavior": "Default Pixel download requires the historical checkpoint SHA256"
+}

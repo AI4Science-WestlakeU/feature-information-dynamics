@@ -1,0 +1,83 @@
+{
+  "source_rule": "PDFs actually referenced by experiments.tex, not same-name historical PNGs",
+  "sources": {
+    "spectral-mnist.png": {
+      "paper_file": "figures/mnist_freq_panorama_paper.pdf",
+      "sha256": "18252a909df7ba45cc79b8552cfde4f2ebd83068373c2f25b7d69877eafbec72"
+    },
+    "spectral-cifar.png": {
+      "paper_file": "figures/cifar10_freq_panorama_paper.pdf",
+      "sha256": "310cea3c15c0a7f994da7ebd8c0ef9a100c2f46547cab9381252466c5b8a88f7"
+    },
+    "convergence.png": {
+      "paper_file": "figures/repr_unconditional_fid.pdf",
+      "sha256": "072eadb7924f37bde827496575edd1c1292a92c6ab16d626484f45ce10fc04ab"
+    },
+    "representations.png": {
+      "paper_file": "figures/repr_layer_curves.pdf",
+      "sha256": "eee69e43aa1cca3b2bd21a3951f0a02a0d0044c3c3deb7c6376c1c73121775c3"
+    }
+  },
+  "crops": {
+    "representation-pixel.png": {
+      "panel": [
+        89,
+        0,
+        1785,
+        483
+      ],
+      "shared_axis": [
+        89,
+        2007,
+        1785,
+        2200
+      ],
+      "operation": "Original panel and original shared x axis concatenated; curves unchanged"
+    },
+    "representation-sdvae.png": {
+      "panel": [
+        89,
+        495,
+        1785,
+        991
+      ],
+      "shared_axis": [
+        89,
+        2007,
+        1785,
+        2200
+      ],
+      "operation": "Original panel and original shared x axis concatenated; curves unchanged"
+    },
+    "representation-vavae.png": {
+      "panel": [
+        89,
+        1003,
+        1785,
+        1499
+      ],
+      "shared_axis": [
+        89,
+        2007,
+        1785,
+        2200
+      ],
+      "operation": "Original panel and original shared x axis concatenated; curves unchanged"
+    },
+    "representation-rae.png": {
+      "panel": [
+        89,
+        1511,
+        1785,
+        2007
+      ],
+      "shared_axis": [
+        89,
+        2007,
+        1785,
+        2200
+      ],
+      "operation": "Original panel and original shared x axis concatenated; curves unchanged"
+    }
+  }
+}

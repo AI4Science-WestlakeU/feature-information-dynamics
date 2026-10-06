@@ -1,0 +1,150 @@
+{
+  "passed": true,
+  "manifest": "https://huggingface.co/datasets/AI4Science-WestlakeU/feature-information-dynamics/resolve/main/release.json",
+  "download": {
+    "release_id": "feature-information-dynamics-imagenet-sr95-v1",
+    "installed_files": 196,
+    "reused_files": 0,
+    "component": "common",
+    "manifest": "data/prepared/release.json"
+  },
+  "rgb_reader": [
+    {
+      "split": "train",
+      "dataset_size": 547448,
+      "samples": [
+        {
+          "index": 0,
+          "label": 0,
+          "filename": "n01440764/n01440764_7055.JPEG",
+          "shapes": {
+            "image": [
+              3,
+              256,
+              256
+            ],
+            "mask": [
+              256,
+              256
+            ],
+            "canny": [
+              256,
+              256
+            ]
+          }
+        },
+        {
+          "index": 273724,
+          "label": 336,
+          "filename": "n02361337/n02361337_8935.JPEG",
+          "shapes": {
+            "image": [
+              3,
+              256,
+              256
+            ],
+            "mask": [
+              256,
+              256
+            ],
+            "canny": [
+              256,
+              256
+            ]
+          }
+        },
+        {
+          "index": 547447,
+          "label": 997,
+          "filename": "n13054560/n13054560_473.JPEG",
+          "shapes": {
+            "image": [
+              3,
+              256,
+              256
+            ],
+            "mask": [
+              256,
+              256
+            ],
+            "canny": [
+              256,
+              256
+            ]
+          }
+        }
+      ]
+    },
+    {
+      "split": "val",
+      "dataset_size": 66685,
+      "samples": [
+        {
+          "index": 0,
+          "label": 93,
+          "filename": "n01829413/n01829413_304.JPEG",
+          "shapes": {
+            "image": [
+              3,
+              256,
+              256
+            ],
+            "mask": [
+              256,
+              256
+            ],
+            "canny": [
+              256,
+              256
+            ]
+          }
+        },
+        {
+          "index": 33342,
+          "label": 387,
+          "filename": "n02509815/n02509815_14586.JPEG",
+          "shapes": {
+            "image": [
+              3,
+              256,
+              256
+            ],
+            "mask": [
+              256,
+              256
+            ],
+            "canny": [
+              256,
+              256
+            ]
+          }
+        },
+        {
+          "index": 66684,
+          "label": 997,
+          "filename": "n13054560/n13054560_12971.JPEG",
+          "shapes": {
+            "image": [
+              3,
+              256,
+              256
+            ],
+            "mask": [
+              256,
+              256
+            ],
+            "canny": [
+              256,
+              256
+            ]
+          }
+        }
+      ]
+    }
+  ],
+  "vavae_public_probe": {
+    "scope": "not present in this manifest"
+  },
+  "elapsed_seconds": 7244.349681443535,
+  "path_display": "Local filesystem prefix omitted; download and reader results unchanged"
+}

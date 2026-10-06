@@ -1,0 +1,43 @@
+{
+  "LightningDiT": {
+    "commit": "f315f25b6aaad600b4d8e50a8167ce06f2e957f3",
+    "patch": "lightningdit-native.patch",
+    "repository": "https://github.com/hustvl/LightningDiT",
+    "portability_changes": "Private default dataset/whitelist strings replaced by empty strings; numeric logic retained.",
+    "patch_sha256": "4d02f63428b4b170bf6763efcaa2841d41f4725243d8bc0a1aad5adb7daeca3e",
+    "encoder_audit": {
+      "runtime_files": {
+        "tokenizer/autoencoder.py": {
+          "sha256": "fc96399073ac90c7a4fc777b1f2ddf378d104fe45031714f2ac487d739cab674",
+          "matches_pin": true
+        },
+        "tokenizer/vavae.py": {
+          "sha256": "d6b4cdfe8f98fec2466150c8e16c7a68913782461ce9e894c9c834ab4571f6c3",
+          "matches_pin": true
+        }
+      },
+      "vavae_tree": "040000 tree 0845b1889ed829437ae665553bdef7027d1b98f6\tvavae",
+      "vavae_tracked_changes": false,
+      "tokenizer_config_changes": "Tracked config and identical untracked copy differ from pin only by local checkpoint path; excluded from patch. Caller supplies YAML with its own checkpoint.",
+      "tracked_config_numeric_changes": false
+    }
+  },
+  "SiT": {
+    "commit": "cbde832a40b153ccc79603412409da9c9b0c568c",
+    "patch": null,
+    "repository": "https://github.com/willisma/SiT"
+  },
+  "RAE": {
+    "commit": "a4d18c4db766419cbe7cb8c02cd9f7ceb0ec9041",
+    "patch": null,
+    "repository": "https://github.com/bytetriper/RAE",
+    "working_files_sha256": {
+      "src/stage2/models/DDT.py": "08c741f4870bb53744a43ac623b1497db097cb1dabecb00d0a64bc588651015a",
+      "src/stage2/transport/__init__.py": "419f160c85ac8ecf786117be77615ecba9e51f2ba0a555ab1ebc5f4e82a958db",
+      "src/stage2/transport/transport.py": "e77e0b0012ff18a74d90c570c837c4fefe4d016fed85681e7e86bd17c64e09a3",
+      "src/stage1/rae.py": "6564d285518c8a80cac7cf54fb4eb116181c298fea349d48ad0fb14ffc0239d9",
+      "src/stage1/encoders/dinov2.py": "7bb854b243126dedc1d0988c8341b9ed69e4f20472d207d8e76f2ede7a90fbad"
+    },
+    "pin_source": "Local third_party/RAE.commit_sha; audited remote working files against pinned upstream, remote copied .git invalid"
+  }
+}

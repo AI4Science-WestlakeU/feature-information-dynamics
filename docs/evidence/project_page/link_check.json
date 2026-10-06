@@ -1,0 +1,33 @@
+{
+  "unique_ids": 26,
+  "anchors": [
+    "chain",
+    "closing",
+    "dynamics",
+    "overview",
+    "perspective",
+    "representations",
+    "top"
+  ],
+  "local_assets": [
+    "assets/mnist_information_concepts.ipynb",
+    "assets/paper.pdf",
+    "assets/representations.png",
+    "assets/spectral-mnist.png",
+    "vendor/katex/contrib/auto-render.min.js",
+    "vendor/katex/katex.min.css",
+    "vendor/katex/katex.min.js",
+    "vendor/render-math.js"
+  ],
+  "manifest_hashes_checked": 76,
+  "http_200_assets": [],
+  "passed": true,
+  "mnist_semantics": {
+    "numeric_arrays_match_shared_verified_measurements": true,
+    "density": "clip negative fitting-error estimates to zero",
+    "accumulation": "trapezoidal clipped finite-range integral in nats",
+    "curve_population": "all 10000 test images; selected class changes images only",
+    "notebook_download_identical": true,
+    "display_total_nats": 2.6719893363356966
+  }
+}

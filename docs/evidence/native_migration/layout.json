@@ -1,0 +1,170 @@
+{
+  "module_map": {
+    "feature_information_dynamics.native.pixel.train": "feature_information_dynamics.pixel.train",
+    "feature_information_dynamics.native.pixel.evaluate": "feature_information_dynamics.pixel.evaluate",
+    "feature_information_dynamics.backends.pixel": "feature_information_dynamics.pixel.model",
+    "feature_information_dynamics.native.latents.train_m06_upstream_rae_film_advanced": "feature_information_dynamics.rae.train",
+    "feature_information_dynamics.native.latents.eval_m06_rae_canny_mmse_FILM": "feature_information_dynamics.rae.evaluate",
+    "feature_information_dynamics.native.latents.train_m06_upstream_sdvae_online_film_advanced": "feature_information_dynamics.sdvae.train",
+    "feature_information_dynamics.native.latents.eval_m06_sit_mmse_online_FILM": "feature_information_dynamics.sdvae.evaluate",
+    "feature_information_dynamics.native.latents.train_m06_upstream_film_advanced": "feature_information_dynamics.vavae.train",
+    "feature_information_dynamics.native.latents.eval_m06_vavae_canny_mmse_FILM": "feature_information_dynamics.vavae.evaluate",
+    "feature_information_dynamics.native.latents.extract_latents_with_filenames": "feature_information_dynamics.vavae.extract_latents",
+    "feature_information_dynamics.native.latents.lightningdit_legacy_adapter": "feature_information_dynamics.vavae.legacy_adapter",
+    "feature_information_dynamics.native.latents.shard_lookup": "feature_information_dynamics.data.shard_lookup",
+    "feature_information_dynamics.native.eval_lib_mmse": "feature_information_dynamics.evaluation",
+    "feature_information_dynamics.native.data.paired_latent_mask_dataset": "feature_information_dynamics.data.paired_latent_mask_dataset",
+    "feature_information_dynamics.native.data.raw_image_mask_canny_dataset": "feature_information_dynamics.data.raw_image_mask_canny_dataset",
+    "feature_information_dynamics.native.data.sharded_mask_canny_dataset": "feature_information_dynamics.data.sharded_mask_canny_dataset",
+    "feature_information_dynamics.native.data.sharded_mask_dataset": "feature_information_dynamics.data.sharded_mask_dataset",
+    "feature_information_dynamics.native.data.train_lib_mask_patch": "feature_information_dynamics.data.train_lib_mask_patch",
+    "feature_information_dynamics.native.data.whitelisted_img_latent_dataset": "feature_information_dynamics.data.whitelisted_img_latent_dataset",
+    "feature_information_dynamics.native.latents.launch": "feature_information_dynamics.workflows"
+  },
+  "files": [
+    {
+      "from": "src/feature_information_dynamics/native/pixel/train.py",
+      "to": "src/feature_information_dynamics/pixel/train.py",
+      "before_sha256": "9b90338e8655002cd56d81152c0943877d505264d1663f7ecc262a036981f07f",
+      "after_sha256": "eb16597361227ba249950a8c1007215ea0466083c7e0ea848f543e31706cc70e",
+      "ast_equal_after_import_relocation": true
+    },
+    {
+      "from": "src/feature_information_dynamics/native/pixel/evaluate.py",
+      "to": "src/feature_information_dynamics/pixel/evaluate.py",
+      "before_sha256": "0d947c5037705524b1d09678dad876b296ed6c0a822f0867717a299f700b1ac1",
+      "after_sha256": "25d5a07645be94e686bff2f936576ab98303ce30c5f83d2c2f283250b73d3452",
+      "ast_equal_after_import_relocation": true
+    },
+    {
+      "from": "src/feature_information_dynamics/backends/pixel.py",
+      "to": "src/feature_information_dynamics/pixel/model.py",
+      "before_sha256": "6320e6ccf031e12a781f38516b4dd364d925861a7fe661dd871839870dac7f07",
+      "after_sha256": "813fde9c0c53e601659d5ed59aaf98b00e6e1cb653e98d996ea34f1ad6cd35e7",
+      "ast_equal_after_import_relocation": true
+    },
+    {
+      "from": "src/feature_information_dynamics/native/latents/train_m06_upstream_rae_film_advanced.py",
+      "to": "src/feature_information_dynamics/rae/train.py",
+      "before_sha256": "bb46fa0b5215ebd91312f858c75d07905585729db6959378ee8c5a8796bdbc72",
+      "after_sha256": "3434588ddbd92916fade2abdb519f6797019ee077ba85e3e7123b0366cbadc6e",
+      "ast_equal_after_import_relocation": true
+    },
+    {
+      "from": "src/feature_information_dynamics/native/latents/eval_m06_rae_canny_mmse_FILM.py",
+      "to": "src/feature_information_dynamics/rae/evaluate.py",
+      "before_sha256": "b31b54c3d1bd64129272e21a4fb803dbff108d198e9804983c054822dfdc4a4f",
+      "after_sha256": "e71d25f16ad4845cc7c0559ae4453d381d7d83a9c5444107c7410de4f0577dd9",
+      "ast_equal_after_import_relocation": true
+    },
+    {
+      "from": "src/feature_information_dynamics/native/latents/train_m06_upstream_sdvae_online_film_advanced.py",
+      "to": "src/feature_information_dynamics/sdvae/train.py",
+      "before_sha256": "efae96429da6c6481c66daa9952def2939352bd4aa4d37062aa0db799c835666",
+      "after_sha256": "d21a7dfb5f615926ce3f1da1cea0dea1f8f5470e318072f1ab73021458a53f85",
+      "ast_equal_after_import_relocation": true
+    },
+    {
+      "from": "src/feature_information_dynamics/native/latents/eval_m06_sit_mmse_online_FILM.py",
+      "to": "src/feature_information_dynamics/sdvae/evaluate.py",
+      "before_sha256": "4e0aa53aeba0c25ee765a8d075b2f261c13f69e135582880ae64794fff8c620c",
+      "after_sha256": "40acf12e13937c341d6a106285e8c79147ddad92b4f810eca8eb75b54497e524",
+      "ast_equal_after_import_relocation": true
+    },
+    {
+      "from": "src/feature_information_dynamics/native/latents/train_m06_upstream_film_advanced.py",
+      "to": "src/feature_information_dynamics/vavae/train.py",
+      "before_sha256": "12294e692030c915202f3724560cab460d0aa584f9785aee72dc242cd63b3d78",
+      "after_sha256": "146faef52086239e2b6e98cb82f459075f01f28f000c822768fbcc810a732c0a",
+      "ast_equal_after_import_relocation": true
+    },
+    {
+      "from": "src/feature_information_dynamics/native/latents/eval_m06_vavae_canny_mmse_FILM.py",
+      "to": "src/feature_information_dynamics/vavae/evaluate.py",
+      "before_sha256": "4aee1c4bca5a4959e4fabadc3fe4cdacbaed4b9d10881639887e555574fdc41b",
+      "after_sha256": "0de1fc93ce1a628e0ad4db547bd7534565d5bebdc53535b494485e9bbf8df7b6",
+      "ast_equal_after_import_relocation": true
+    },
+    {
+      "from": "src/feature_information_dynamics/native/latents/extract_latents_with_filenames.py",
+      "to": "src/feature_information_dynamics/vavae/extract_latents.py",
+      "before_sha256": "240a07826e1ae0c7cfad3ab19a935555749d317d48a88478002f691b777faf8e",
+      "after_sha256": "fe2e6c78bca4e141053d188694ba5e6a6955df8dcb8152a493dd80a57e3dff67",
+      "additional_changes": [
+        "removed unused SDVAE cache builders/branch",
+        "cache shard default 10240, divisible by default batch 64"
+      ],
+      "relocation_stage_ast_equal": true,
+      "current_file_note": "Additional changes listed separately; equality refers to initial relocation stage, not the full subsequent file."
+    },
+    {
+      "from": "src/feature_information_dynamics/native/latents/lightningdit_legacy_adapter.py",
+      "to": "src/feature_information_dynamics/vavae/legacy_adapter.py",
+      "before_sha256": "a2f3b7246fcc42df7d22020a9452e6dff45ef063a5876a093b479691a0834e3f",
+      "after_sha256": "ff1987857fbc690a3742fe6d6db120a92cda86aef800ec0568074a17420c483d",
+      "ast_equal_after_import_relocation": true
+    },
+    {
+      "from": "src/feature_information_dynamics/native/latents/shard_lookup.py",
+      "to": "src/feature_information_dynamics/data/shard_lookup.py",
+      "before_sha256": "13f19ce5baa478f378c2f1ee4d151d5b63a54eb16e71878b1e82f146993a7486",
+      "after_sha256": "a9738d2a222bda447dc454e0122decb016693bb21c47bdbeaeed0021305d0e37",
+      "ast_equal_after_import_relocation": true
+    },
+    {
+      "from": "src/feature_information_dynamics/native/eval_lib_mmse.py",
+      "to": "src/feature_information_dynamics/evaluation.py",
+      "before_sha256": "0c930c65d1df0196eef21c1edfcaa0a067455edec14d13dbc4d66d5c74dcb864",
+      "after_sha256": "c45d37cc0675b9408e54ae8e4bf99ef3a4dd45d5881ced10126c9fe6d03f0620",
+      "additional_changes": [
+        "updated documentation import example"
+      ],
+      "relocation_stage_ast_equal": true,
+      "current_file_note": "Additional changes listed separately; equality refers to initial relocation stage, not the full subsequent file."
+    },
+    {
+      "from": "src/feature_information_dynamics/native/data/paired_latent_mask_dataset.py",
+      "to": "src/feature_information_dynamics/data/paired_latent_mask_dataset.py",
+      "before_sha256": "c5e1c1f8bcb0cc71f33cca2f43f1e6e7e6fca147c4c72c9231e33a61864ffe49",
+      "after_sha256": "c757801c75d658581a43296b771cf3df1ae435d37024d46a7db523250f256385",
+      "ast_equal_after_import_relocation": true
+    },
+    {
+      "from": "src/feature_information_dynamics/native/data/raw_image_mask_canny_dataset.py",
+      "to": "src/feature_information_dynamics/data/raw_image_mask_canny_dataset.py",
+      "before_sha256": "2bdae2c53faccd8ffccaaf7958f96212f423bcc67b80daedc4e04c8f913f65db",
+      "after_sha256": "27c0801084932e38d4e3380f67ecb80a694a5c292895a149aaae82d3d41636f8",
+      "ast_equal_after_import_relocation": true
+    },
+    {
+      "from": "src/feature_information_dynamics/native/data/sharded_mask_canny_dataset.py",
+      "to": "src/feature_information_dynamics/data/sharded_mask_canny_dataset.py",
+      "before_sha256": "d78144facd94afab45da4f69d864de14a339c0108abf8bcaa013740c814dc97c",
+      "after_sha256": "13b8dd2b745d67763f79b766fa99e4ea52bd7365f59bb45d4b7b43da6a9011c2",
+      "ast_equal_after_import_relocation": true
+    },
+    {
+      "from": "src/feature_information_dynamics/native/data/sharded_mask_dataset.py",
+      "to": "src/feature_information_dynamics/data/sharded_mask_dataset.py",
+      "before_sha256": "3dc99a3c182499a4eb08bf32bddea2c006743fc28cdf9bd03b614be91455d671",
+      "after_sha256": "5d555b3d4e7e4468d69b5af1c582a9db45cda680ea49081628d1aeb25e348008",
+      "ast_equal_after_import_relocation": true
+    },
+    {
+      "from": "src/feature_information_dynamics/native/data/train_lib_mask_patch.py",
+      "to": "src/feature_information_dynamics/data/train_lib_mask_patch.py",
+      "before_sha256": "9ac7492f12d81525573a647e039e6ff77c3b53905953982de6f61645a28ed0b6",
+      "after_sha256": "f652a1975fcd4460d34afd8e8d04eda3edd470bce2fff9a476e178b096571768",
+      "ast_equal_after_import_relocation": true
+    },
+    {
+      "from": "src/feature_information_dynamics/native/data/whitelisted_img_latent_dataset.py",
+      "to": "src/feature_information_dynamics/data/whitelisted_img_latent_dataset.py",
+      "before_sha256": "bf60f28adb79bed57bf361b57384e35f2217e4934835e3d599d6d8c977ff2389",
+      "after_sha256": "29d66972ea04447a0bfe6f8a8f95f0eba0ba55452d820b23a0254c04bf161943",
+      "ast_equal_after_import_relocation": true
+    }
+  ],
+  "sdvae_route": "May online",
+  "vavae_route": "official offline"
+}

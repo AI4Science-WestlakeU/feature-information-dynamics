@@ -1,0 +1,50 @@
+{
+  "status": "pass",
+  "torch": "2.10.0+cu128",
+  "device": "cpu",
+  "fake_tail_alignment": true,
+  "hook_cleanup": true,
+  "real_native_zero_gate_identity": true,
+  "native_and_fixed_loss_backward_ema": true,
+  "losses": {
+    "native": 1.507354736328125,
+    "fixed": 1.0224100351333618
+  },
+  "shape": [
+    2,
+    3,
+    16,
+    16
+  ],
+  "native_smoke_config": {
+    "hidden_size": 64,
+    "depth": 3,
+    "heads": 4,
+    "patch_size": 4,
+    "context_length": 2,
+    "context_start": 1
+  },
+  "runtime_adjustment": "Native JiT RoPE allocates CUDA tables; moved freqs_cos/sin to CPU for bounded test, TORCHDYNAMO_DISABLE=1. No source changes. Fake-token assertions passed in preceding attempt before native CPU device failure.",
+  "limits": "No pretrained XL/L weights, real data loader, distributed resume or end-to-end training exercised.",
+  "source_backend_sha256": "6320e6ccf031e12a781f38516b4dd364d925861a7fe661dd871839870dac7f07",
+  "genuine_cuda_smoke": {
+    "status": "pass",
+    "device": "cuda",
+    "torch": "2.10.0+cu128",
+    "zero_gate_identity": true,
+    "loss_backward_optimizer_ema": true,
+    "real_tail_token_alignment_and_hook_cleanup": true,
+    "losses": {
+      "native": 2.018901824951172,
+      "fixed": 1.0124073028564453
+    },
+    "shape": [
+      2,
+      3,
+      16,
+      16
+    ],
+    "tiny_random_weights": true
+  },
+  "reproducible_script": "tests/native_pixel_runtime_smoke.py"
+}

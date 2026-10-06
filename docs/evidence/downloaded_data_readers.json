@@ -1,0 +1,120 @@
+{
+  "passed": true,
+  "source": "existing historical prepared data",
+  "scope": "public raw reader actual RGB/mask/Canny; no latent source or SAM import",
+  "records": [
+    {
+      "split": "train",
+      "dataset_size": 547448,
+      "samples": [
+        {
+          "filename": "n01440764/n01440764_7055.JPEG",
+          "label": 0,
+          "mask_pixels": 23040,
+          "canny_pixels": 1476
+        },
+        {
+          "filename": "n02361337/n02361337_8935.JPEG",
+          "label": 336,
+          "mask_pixels": 10364,
+          "canny_pixels": 435
+        },
+        {
+          "filename": "n13054560/n13054560_473.JPEG",
+          "label": 997,
+          "mask_pixels": 41367,
+          "canny_pixels": 10654
+        }
+      ],
+      "elapsed_seconds": 16.835625920444727
+    },
+    {
+      "split": "val",
+      "dataset_size": 66686,
+      "samples": [
+        {
+          "filename": "n01440764/n01440764_10048.JPEG",
+          "label": 0,
+          "mask_pixels": 9216,
+          "canny_pixels": 1114
+        },
+        {
+          "filename": "n02509815/n02509815_14586.JPEG",
+          "label": 387,
+          "mask_pixels": 24725,
+          "canny_pixels": 2326
+        },
+        {
+          "filename": "n13054560/n13054560_12971.JPEG",
+          "label": 997,
+          "mask_pixels": 13211,
+          "canny_pixels": 2345
+        }
+      ],
+      "elapsed_seconds": 10.069824191741645
+    }
+  ],
+  "vavae": {
+    "passed": true,
+    "scope": "public VAVAE offline reader actual cached normalized latents/mask/Canny; no extraction or GPU",
+    "records": [
+      {
+        "split": "train",
+        "dataset_size": 547448,
+        "samples": [
+          {
+            "index": 0,
+            "label": 0,
+            "latent_mean": 0.0029712682589888573,
+            "mask_pixels": 4788,
+            "canny_pixels": 623
+          },
+          {
+            "index": 273724,
+            "label": 388,
+            "latent_mean": 0.14746449887752533,
+            "mask_pixels": 45846,
+            "canny_pixels": 3224
+          },
+          {
+            "index": 547447,
+            "label": 93,
+            "latent_mean": 0.018557773903012276,
+            "mask_pixels": 8331,
+            "canny_pixels": 1301
+          }
+        ],
+        "elapsed_seconds": 5.7813676949590445
+      },
+      {
+        "split": "val",
+        "dataset_size": 66686,
+        "samples": [
+          {
+            "index": 0,
+            "label": 0,
+            "latent_mean": -0.006906834430992603,
+            "mask_pixels": 9216,
+            "canny_pixels": 1114
+          },
+          {
+            "index": 33343,
+            "label": 387,
+            "latent_mean": 0.041140489280223846,
+            "mask_pixels": 8816,
+            "canny_pixels": 1373
+          },
+          {
+            "index": 66685,
+            "label": 997,
+            "latent_mean": -0.04781142994761467,
+            "mask_pixels": 15055,
+            "canny_pixels": 3540
+          }
+        ],
+        "elapsed_seconds": 1.3417365672066808
+      }
+    ],
+    "loader_log": "[WhitelistedImgLatentDataset] paired whitelist filter (train): 648832 \u2192 547448 samples\n[MaskedShardedDataset] phase=mask | mapped 64 latent->mask shard pairs in did_q01/data/mask_shards\n[MaskedCannyShardedDataset] phase=canny_mask | mapped 64 latent->canny shard pairs in did_q01/data/canny_shards\n[WhitelistedImgLatentDataset] paired whitelist filter (val): 648832 \u2192 66686 samples\n[MaskedShardedDataset] phase=mask | mapped 64 latent->mask shard pairs in did_q01/data/mask_shards\n[MaskedCannyShardedDataset] phase=canny_mask | mapped 64 latent->canny shard pairs in did_q01/data/canny_shards\n"
+  }
+}

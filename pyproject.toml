@@ -1,0 +1,29 @@
+[build-system]
+requires = ["setuptools>=68"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "feature-information-dynamics"
+version = "0.1.0.dev0"
+description = "Measurement and analysis tools for Feature Information Dynamics in Diffusion"
+requires-python = ">=3.10"
+license = {file = "LICENSE"}
+dependencies = ["numpy>=1.24,<3", "matplotlib>=3.7,<4"]
+
+[project.optional-dependencies]
+data = ["safetensors>=0.4,<1", "PyYAML>=6,<7"]
+models = ["torch>=2.2,<3", "torchvision>=0.17,<1", "accelerate>=0.28,<2", "omegaconf>=2.3,<3", "PyYAML>=6,<7", "tensorboard>=2.16,<3", "safetensors>=0.4,<1", "timm>=0.9,<2", "einops>=0.7,<1", "diffusers>=0.27,<1", "Pillow>=10,<13", "opencv-python-headless>=4.8,<5"]
+mnist = ["torch>=2.2,<3"]
+notebook = ["jupyterlab>=4,<5", "nbclient>=0.10,<1", "ipykernel>=6,<8"]
+conditions = ["Pillow>=10,<13", "opencv-python-headless>=4.8,<5"]
+
+[project.scripts]
+feature-information = "feature_information_dynamics.cli:main"
+
+[tool.setuptools]
+license-files = ["LICENSE", "LICENSES/*.txt", "THIRD_PARTY_NOTICES.md"]
+
+[tool.setuptools.packages.find]
+where = ["src"]
+
+

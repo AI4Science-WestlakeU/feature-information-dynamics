@@ -1,0 +1,240 @@
+{
+  "clean_lightningdit_patch_replay": true,
+  "tests": [
+    {
+      "representation": "rae",
+      "action": "train",
+      "returncode": 0,
+      "arguments": [
+        "python",
+        "-m",
+        "feature_information_dynamics.native.latents.launch",
+        "rae",
+        "train",
+        "--upstream-source",
+        "<pinned official source>",
+        "--lightningdit-source",
+        "<clean pinned LightningDiT plus published patch>",
+        "--in-process",
+        "--",
+        "--help"
+      ],
+      "stderr_tail": ""
+    },
+    {
+      "representation": "rae",
+      "action": "eval",
+      "returncode": 0,
+      "arguments": [
+        "python",
+        "-m",
+        "feature_information_dynamics.native.latents.launch",
+        "rae",
+        "eval",
+        "--upstream-source",
+        "<pinned official source>",
+        "--lightningdit-source",
+        "<clean pinned LightningDiT plus published patch>",
+        "--in-process",
+        "--",
+        "--help"
+      ],
+      "stderr_tail": ""
+    },
+    {
+      "representation": "sdvae-online",
+      "action": "train",
+      "returncode": 0,
+      "arguments": [
+        "python",
+        "-m",
+        "feature_information_dynamics.native.latents.launch",
+        "sdvae-online",
+        "train",
+        "--upstream-source",
+        "<pinned official source>",
+        "--lightningdit-source",
+        "<clean pinned LightningDiT plus published patch>",
+        "--in-process",
+        "--",
+        "--help"
+      ],
+      "stderr_tail": ""
+    },
+    {
+      "representation": "sdvae-online",
+      "action": "cache",
+      "returncode": 0,
+      "arguments": [
+        "python",
+        "-m",
+        "feature_information_dynamics.native.latents.launch",
+        "sdvae-online",
+        "cache",
+        "--upstream-source",
+        "<pinned official source>",
+        "--lightningdit-source",
+        "<clean pinned LightningDiT plus published patch>",
+        "--in-process",
+        "--",
+        "--help"
+      ],
+      "stderr_tail": ""
+    },
+    {
+      "representation": "sdvae-online",
+      "action": "eval",
+      "returncode": 0,
+      "arguments": [
+        "python",
+        "-m",
+        "feature_information_dynamics.native.latents.launch",
+        "sdvae-online",
+        "eval",
+        "--upstream-source",
+        "<pinned official source>",
+        "--lightningdit-source",
+        "<clean pinned LightningDiT plus published patch>",
+        "--in-process",
+        "--",
+        "--help"
+      ],
+      "stderr_tail": ""
+    },
+    {
+      "representation": "sdvae-offline",
+      "action": "train",
+      "returncode": 0,
+      "arguments": [
+        "python",
+        "-m",
+        "feature_information_dynamics.native.latents.launch",
+        "sdvae-offline",
+        "train",
+        "--upstream-source",
+        "<pinned official source>",
+        "--lightningdit-source",
+        "<clean pinned LightningDiT plus published patch>",
+        "--in-process",
+        "--",
+        "--help"
+      ],
+      "stderr_tail": ""
+    },
+    {
+      "representation": "sdvae-offline",
+      "action": "cache",
+      "returncode": 0,
+      "arguments": [
+        "python",
+        "-m",
+        "feature_information_dynamics.native.latents.launch",
+        "sdvae-offline",
+        "cache",
+        "--upstream-source",
+        "<pinned official source>",
+        "--lightningdit-source",
+        "<clean pinned LightningDiT plus published patch>",
+        "--in-process",
+        "--",
+        "--help"
+      ],
+      "stderr_tail": ""
+    },
+    {
+      "representation": "sdvae-offline",
+      "action": "eval",
+      "returncode": 0,
+      "arguments": [
+        "python",
+        "-m",
+        "feature_information_dynamics.native.latents.launch",
+        "sdvae-offline",
+        "eval",
+        "--upstream-source",
+        "<pinned official source>",
+        "--lightningdit-source",
+        "<clean pinned LightningDiT plus published patch>",
+        "--in-process",
+        "--",
+        "--help"
+      ],
+      "stderr_tail": ""
+    },
+    {
+      "representation": "vavae",
+      "action": "train",
+      "returncode": 0,
+      "arguments": [
+        "python",
+        "-m",
+        "feature_information_dynamics.native.latents.launch",
+        "vavae",
+        "train",
+        "--upstream-source",
+        "<pinned official source>",
+        "--lightningdit-source",
+        "<clean pinned LightningDiT plus published patch>",
+        "--in-process",
+        "--",
+        "--help"
+      ],
+      "stderr_tail": ""
+    },
+    {
+      "representation": "vavae",
+      "action": "cache",
+      "returncode": 0,
+      "arguments": [
+        "python",
+        "-m",
+        "feature_information_dynamics.native.latents.launch",
+        "vavae",
+        "cache",
+        "--upstream-source",
+        "<pinned official source>",
+        "--lightningdit-source",
+        "<clean pinned LightningDiT plus published patch>",
+        "--in-process",
+        "--",
+        "--help"
+      ],
+      "stderr_tail": ""
+    },
+    {
+      "representation": "vavae",
+      "action": "eval",
+      "returncode": 0,
+      "arguments": [
+        "python",
+        "-m",
+        "feature_information_dynamics.native.latents.launch",
+        "vavae",
+        "eval",
+        "--upstream-source",
+        "<pinned official source>",
+        "--lightningdit-source",
+        "<clean pinned LightningDiT plus published patch>",
+        "--in-process",
+        "--",
+        "--help"
+      ],
+      "stderr_tail": ""
+    }
+  ],
+  "passed": true,
+  "after_final_source_updates": [
+    {
+      "representation": "sdvae-online",
+      "action": "train",
+      "returncode": 0,
+      "stderr_tail": ""
+    },
+    {
+      "representation": "vavae",
+      "action": "cache",
+      "returncode": 0,
+      "stderr_tail": ""
+    }
+  ]
+}

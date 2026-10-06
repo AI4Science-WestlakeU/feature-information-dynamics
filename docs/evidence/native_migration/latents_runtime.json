@@ -1,0 +1,201 @@
+{
+  "remote_temp": "/tmp/fid-runtime-smoke-247y4J",
+  "reproducible_script": "tests/native_latents_runtime_smoke.py",
+  "results": {
+    "rae": {
+      "status": "pass",
+      "representation": "rae",
+      "device": "cuda",
+      "torch": "2.5.1+cu121",
+      "shape": [
+        1,
+        768,
+        16,
+        16
+      ],
+      "constructor": {
+        "input_size": 16,
+        "patch_size": 1,
+        "in_channels": 768,
+        "hidden_size": [
+          64,
+          128
+        ],
+        "depth": [
+          2,
+          1
+        ],
+        "num_heads": [
+          4,
+          4
+        ],
+        "class_dropout_prob": 0.0,
+        "num_classes": 1001
+      },
+      "transport": {
+        "path_type": "Linear",
+        "prediction": "velocity",
+        "loss_weight": null,
+        "sample_eps": null,
+        "train_eps": null,
+        "time_dist_type": "logit-normal_0_1",
+        "time_dist_shift": 6.9282032
+      },
+      "optimizer": {
+        "lr": 1e-05,
+        "betas": [
+          0.9,
+          0.95
+        ],
+        "weight_decay": 0.0
+      },
+      "loss": 1.9940247535705566,
+      "loss_keys": [
+        "pred",
+        "loss"
+      ],
+      "backward_optimizer_ema": true,
+      "pretrained_weights": false,
+      "cuda_peak_bytes": 38813696,
+      "limits": "Synthetic latent inputs; no encoder, real data, checkpoint or distributed resume."
+    },
+    "vavae": {
+      "status": "pass",
+      "representation": "vavae",
+      "device": "cuda",
+      "torch": "2.5.1+cu121",
+      "shape": [
+        1,
+        32,
+        16,
+        16
+      ],
+      "constructor": {
+        "input_size": 16,
+        "patch_size": 1,
+        "in_channels": 32,
+        "hidden_size": 64,
+        "depth": 2,
+        "num_heads": 4,
+        "class_dropout_prob": 0.0,
+        "num_classes": 1001,
+        "learn_sigma": false,
+        "use_checkpoint": false
+      },
+      "transport": {
+        "path_type": "Linear",
+        "prediction": "velocity",
+        "loss_weight": null,
+        "sample_eps": null,
+        "train_eps": null,
+        "use_cosine_loss": true,
+        "use_lognorm": true
+      },
+      "optimizer": {
+        "lr": 0.0002,
+        "betas": [
+          0.9,
+          0.95
+        ],
+        "weight_decay": 0.0
+      },
+      "loss": 3.0594704151153564,
+      "loss_keys": [
+        "pred",
+        "loss",
+        "cos_loss"
+      ],
+      "backward_optimizer_ema": true,
+      "pretrained_weights": false,
+      "cuda_peak_bytes": 23818752,
+      "limits": "Synthetic latent inputs; no encoder, real data, checkpoint or distributed resume."
+    },
+    "sdvae-online": {
+      "status": "pass",
+      "representation": "sdvae-online",
+      "device": "cuda",
+      "torch": "2.5.1+cu121",
+      "shape": [
+        1,
+        4,
+        32,
+        32
+      ],
+      "constructor": {
+        "input_size": 32,
+        "num_classes": 1001,
+        "learn_sigma": true,
+        "use_checkpoint": false,
+        "class_dropout_prob": 0.0
+      },
+      "transport": {
+        "path_type": "Linear",
+        "prediction": "velocity",
+        "loss_weight": null,
+        "sample_eps": null,
+        "train_eps": null
+      },
+      "optimizer": {
+        "lr": 0.0001,
+        "betas": [
+          0.9,
+          0.95
+        ],
+        "weight_decay": 0.0
+      },
+      "loss": 2.0813331604003906,
+      "loss_keys": [
+        "pred",
+        "loss"
+      ],
+      "backward_optimizer_ema": true,
+      "pretrained_weights": false,
+      "cuda_peak_bytes": 13705895424,
+      "limits": "Synthetic latent inputs; no encoder, real data, checkpoint or distributed resume."
+    },
+    "sdvae-offline": {
+      "status": "pass",
+      "representation": "sdvae-offline",
+      "device": "cuda",
+      "torch": "2.5.1+cu121",
+      "shape": [
+        1,
+        4,
+        32,
+        32
+      ],
+      "constructor": {
+        "input_size": 32,
+        "num_classes": 1001,
+        "learn_sigma": true,
+        "use_checkpoint": false,
+        "class_dropout_prob": 0.0
+      },
+      "transport": {
+        "path_type": "Linear",
+        "prediction": "velocity",
+        "loss_weight": null,
+        "sample_eps": null,
+        "train_eps": null
+      },
+      "optimizer": {
+        "lr": 0.0001,
+        "betas": [
+          0.9,
+          0.95
+        ],
+        "weight_decay": 0.0
+      },
+      "loss": 2.0813331604003906,
+      "loss_keys": [
+        "pred",
+        "loss"
+      ],
+      "backward_optimizer_ema": true,
+      "pretrained_weights": false,
+      "cuda_peak_bytes": 13706041856,
+      "adapter_lr_multiplier": 1.0,
+      "limits": "Synthetic latent inputs; no encoder, real data, checkpoint, phase freezing or distributed resume."
+    }
+  }
+}

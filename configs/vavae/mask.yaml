@@ -1,0 +1,74 @@
+# Actual FiLM launch settings from scripts/launch_m06_vavae_mask_FILM_31196.sh; weight_init must be your warmup checkpoint.
+# Native vavae: numerical settings copied from configs/m06_vavae_mask_prod.yaml.
+# Fill every empty data/checkpoint/source path before running.
+ckpt_path: ""
+
+data:
+  data_path: ""
+  fid_reference_file: ""
+  image_size: 256
+  num_classes: 1001
+  num_workers: 8
+  latent_norm: true
+  latent_multiplier: 1.0
+  paired_train_whitelist: ""
+  paired_val_whitelist: ""
+  dataset_class: "sharded_mask"
+  phase: "mask"
+  mask_shard_dir: ""
+
+vae:
+  model_name: 'vavae_f16d32'
+  downsample_ratio: 16
+
+model:
+  model_type: LightningDiT-XL/1
+  use_qknorm: false
+  use_swiglu: true
+  use_rope: true
+  use_rmsnorm: true
+  wo_shift: false
+  in_chans: 32
+  class_dropout_prob: 0.0
+
+train:
+  max_steps: 64200
+  global_batch_size: 1024
+  global_seed: 0
+  output_dir: ""
+  exp_name: "m06_vavae_mask_prod"
+  ckpt: null
+  weight_init: ""
+  log_every: 100
+  val_seed: 12345
+  val_n_batches: 8
+  val_every_n_epochs: 3
+  early_stop_patience: 8
+  early_stop_min_epochs: 30
+
+optimizer:
+  lr: 0.0002
+  beta2: 0.95
+
+transport:
+  path_type: Linear
+  prediction: velocity
+  loss_weight: null
+  sample_eps: null
+  train_eps: null
+  use_cosine_loss: true
+  use_lognorm: true
+
+sample:
+  mode: ODE
+  sampling_method: euler
+  atol: 0.000001
+  rtol: 0.001
+  reverse: false
+  likelihood: false
+  num_sampling_steps: 250
+  cfg_scale: 10.0
+  per_proc_batch_size: 4
+  fid_num: 50000
+  cfg_interval_start: 0.11
+  timestep_shift: 0.3

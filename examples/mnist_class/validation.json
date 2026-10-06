@@ -1,0 +1,34 @@
+{
+  "passed": true,
+  "relative_error_limit": 0.2,
+  "estimate_nats": 2.625762278168467,
+  "reference_nats": 2.300848365067822,
+  "relative_error": 0.14121483103084345,
+  "paired_image_bootstrap_95ci": [
+    2.5703247984077158,
+    2.680262623076136
+  ],
+  "ci_entirely_within_10_percent": false,
+  "ci_entirely_within_acceptance_band": true,
+  "per_noise_repeat_nats": [
+    2.616490098461914,
+    2.6350344578750193
+  ],
+  "coarser_grid_integral_nats": 2.603378655928023,
+  "coarser_grid_change_nats": -0.022383622240443657,
+  "sample_count": 10000,
+  "noise_repeat_count": 2,
+  "excluded_prior_demo_ids": 0,
+  "log10_snr_bounds": [
+    -5.0,
+    3.0
+  ],
+  "selected_step": 100000,
+  "checkpoint_sha256": "91c83f4f8a4574c7dfe560d0724aaec4a1003291cf66e1ebeac13aa0c609fa71",
+  "seconds": 57.231742662377656,
+  "device": "cuda",
+  "torch": "2.3.0a0+6ddf5cf85e.nv24.04",
+  "numpy": "1.24.4",
+  "measurement_precision": "FP32; TF32 disabled for matmul and cuDNN convolutions",
+  "scope": "A frozen neural estimator and finite integral; agreement with class entropy is not proof of pointwise Bayes MMSE"
+}

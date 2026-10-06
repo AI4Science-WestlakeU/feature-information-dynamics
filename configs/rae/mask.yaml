@@ -1,0 +1,52 @@
+# Native rae: numerical settings copied from configs/m06_rae_mask_prod.yaml.
+# Fill every empty data/checkpoint/source path before running.
+
+ckpt_path: ""
+
+data:
+  data_path: ""
+  fid_reference_file: ""
+  image_size: 256
+  num_classes: 1001
+  num_workers: 8
+  paired_train_whitelist: ""
+  paired_val_whitelist: ""
+  mask_shard_dir: ""
+  canny_shard_dir: ""
+  phase: "mask"
+
+model:
+  rae_config_yaml: ""
+  num_classes: 1001
+  class_dropout_prob: 0.0
+
+train:
+  max_steps: 32100
+  global_batch_size: 1024
+  gradient_accumulation_steps: 2
+  global_seed: 0
+  output_dir: ""
+  exp_name: "m06_rae_mask_prod"
+  ckpt: null
+  weight_init: ""
+  log_every: 100
+  val_seed: 12345
+  val_n_batches: 16
+  val_every_n_epochs: 3
+  early_stop_patience: 2
+  early_stop_min_epochs: 6
+
+optimizer:
+  lr: 0.000005
+  adapter_lr_multiplier: 10.0
+  beta2: 0.95
+  max_grad_norm: 1.0
+
+transport:
+  path_type: Linear
+  prediction: velocity
+  loss_weight: null
+  sample_eps: null
+  train_eps: null
+  time_dist_type: "logit-normal_0_1"
+  time_dist_shift: 6.9282032

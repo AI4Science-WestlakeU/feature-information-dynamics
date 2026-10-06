@@ -1,0 +1,54 @@
+# Historical executed recipe; replace resource paths, retain scientific settings.
+resources:
+  jit_source: YOUR_PATH/JiT
+
+ckpt_path: YOUR_PATH/jit/checkpoint-last.pth
+data:
+  canny_shard_dir: YOUR_PATH/canny_shards
+  data_path: YOUR_PATH/imagenet
+  image_size: 256
+  mask_shard_dir: YOUR_PATH/mask_shards
+  num_classes: 1000
+  num_workers: 8
+  paired_train_whitelist: YOUR_PATH/paired_train_whitelist.json
+  paired_val_whitelist: YOUR_PATH/paired_val_whitelist.json
+  phase: canny
+model:
+  class_dropout_prob: 0.0
+  use_checkpoint: false
+  name: JiT-L/16
+optimizer:
+  adapter_lr_multiplier: 1.0
+  beta2: 0.95
+  lr: 1.0e-05
+  max_grad_norm: 1.0
+train:
+  condition_mode: canny_only
+  early_stop_min_epochs: 100000
+  early_stop_patience: 100000
+  exp_name: direct_lgm1p5_final
+  global_batch_size: 256
+  global_seed: 20260908
+  log_every: 100
+  max_steps: 12828
+  output_dir: runs/pixel_fixed_snr
+  p_mean: -0.8
+  p_std: 0.8
+  reset_best_val_loss: true
+  val_every_n_epochs: 1
+  val_n_batches: 8
+  val_seed: 42
+  weight_init: YOUR_PATH/pixel_fixed_parent/raw_only.pt
+  init_model_from_ema: false
+  resume: false
+  snapshot_epochs: []
+  checkpoint_every_n_epochs: 0
+  t_eps: 0.05
+  mask_dropout_prob: 0.0
+  canny_dropout_prob: 0.0
+  t_sampler:
+    mode: fixed_t
+    fixed_t: 0.150979557211
+transport:
+  path_type: Linear
+  prediction: velocity

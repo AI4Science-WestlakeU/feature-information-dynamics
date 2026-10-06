@@ -1,0 +1,733 @@
+diff --git a/datasets/img_latent_dataset.py b/datasets/img_latent_dataset.py
+index da38707..3a266db 100644
+--- a/datasets/img_latent_dataset.py
++++ b/datasets/img_latent_dataset.py
+@@ -1,90 +1,406 @@
+ """
+ ImageNet Latent Dataset with safetensors.
++
++Also includes PixelImageNetDataset for raw pixel-space training
++with ImageFolder-style loading + SR95 whitelist filtering.
+ """
+ 
++import hashlib
++import json
+ import os
+-import numpy as np
+ from glob import glob
+-from tqdm import tqdm
++from pathlib import Path
+ 
++import numpy as np
+ import torch
++from PIL import Image
++from safetensors import safe_open
+ from torch.utils.data import Dataset
++from torchvision import transforms
++from tqdm import tqdm
+ 
+-from safetensors import safe_open
++
++def _load_sr95_class_ids(whitelist_path: str) -> set:
++    """Load SR95 whitelist class IDs from JSON config.
++
++    Args:
++        whitelist_path: Path to imagenet_sr95_whitelist.json.
++
++    Returns:
++        Set of integer class IDs belonging to SR95 subset.
++    """
++    with open(whitelist_path) as f:
++        data = json.load(f)
++    # JSON may be list[int] or dict with 'class_ids' key
++    if isinstance(data, list):
++        class_ids = data
++    else:
++        class_ids = data["class_ids"]
++    return set(int(c) for c in class_ids)
++
++
++def _compute_sr95_split_indices(
++    all_indices: list,
++    all_labels: list,
++    split: str,
++    seed: int = 42,
++) -> list:
++    """Deterministic 9:1 train/val split over SR95 subset.
++
++    Args:
++        all_indices: Global sample indices (into img_to_file_map or ImageFolder).
++        all_labels: Corresponding integer class labels.
++        split: 'train' (90%) or 'val' (10%).
++        seed: Random seed for reproducibility.
++
++    Returns:
++        List of indices for the requested split.
++    """
++    n = len(all_indices)
++    rng = np.random.RandomState(seed)
++    perm = rng.permutation(n)  # [n]
++    n_val = max(1, int(0.1 * n))
++    val_mask = np.zeros(n, dtype=bool)
++    val_mask[perm[:n_val]] = True
++    if split == "val":
++        selected = [all_indices[i] for i in range(n) if val_mask[i]]
++    else:
++        selected = [all_indices[i] for i in range(n) if not val_mask[i]]
++    return selected
+ 
+ 
+ class ImgLatentDataset(Dataset):
+-    def __init__(self, data_dir, latent_norm=True, latent_multiplier=1.0):
++    """Latent shard dataset backed by safetensors files.
++
++    Supports optional SR95 whitelist filtering and deterministic
++    90/10 train/val split within the SR95 subset.
++
++    Args:
++        data_dir: Directory containing ``*.safetensors`` shards.
++        latent_norm: Normalize latents using per-channel mean/std from
++            ``latents_stats.pt`` (loaded or computed on first use).
++        latent_multiplier: Optional scalar multiplier applied after norm.
++        sr95_filter: When True, restrict to SR95 whitelist classes.
++        split: 'train' (90%) or 'val' (10%) of SR95 subset.  Ignored
++            when ``sr95_filter=False``.
++        whitelist_path: Path to ``imagenet_sr95_whitelist.json``.
++            Defaults to the canonical project location.
++    """
++
++    _DEFAULT_WHITELIST = (
++        ""
++    )
++
++    def __init__(
++        self,
++        data_dir: str,
++        latent_norm: bool = True,
++        latent_multiplier: float = 1.0,
++        sr95_filter: bool = False,
++        split: str = "train",
++        whitelist_path: str = _DEFAULT_WHITELIST,
++    ) -> None:
+         self.data_dir = data_dir
+         self.latent_norm = latent_norm
+         self.latent_multiplier = latent_multiplier
++        self.sr95_filter = sr95_filter
++        self.split = split
+ 
+         self.files = sorted(glob(os.path.join(data_dir, "*.safetensors")))
+-        self.img_to_file_map = self.get_img_to_safefile_map()
+-        
++        self._full_map = self._build_img_to_file_map()
++
++        if sr95_filter:
++            sr95_ids = _load_sr95_class_ids(whitelist_path)
++            self.valid_indices = self._filter_sr95(sr95_ids)
++        else:
++            self.valid_indices = list(range(len(self._full_map)))
++
+         if latent_norm:
+             self._latent_mean, self._latent_std = self.get_latent_stats()
+ 
+-    def get_img_to_safefile_map(self):
++    # ------------------------------------------------------------------
++    # Internal helpers
++    # ------------------------------------------------------------------
++
++    def _build_img_to_file_map(self) -> dict:
++        """Map global sample index → (safetensors file, index in file)."""
+         img_to_file = {}
+         for safe_file in self.files:
+             with safe_open(safe_file, framework="pt", device="cpu") as f:
+-                labels = f.get_slice('labels')
+-                labels_shape = labels.get_shape()
+-                num_imgs = labels_shape[0]
++                labels = f.get_slice("labels")
++                num_imgs = labels.get_shape()[0]
+                 cur_len = len(img_to_file)
+                 for i in range(num_imgs):
+-                    img_to_file[cur_len+i] = {
+-                        'safe_file': safe_file,
+-                        'idx_in_file': i
++                    img_to_file[cur_len + i] = {
++                        "safe_file": safe_file,
++                        "idx_in_file": i,
+                     }
+         return img_to_file
+ 
++    def _detect_label_schema(self) -> str:
++        """Detect label schema by scanning all shards' label tensors.
++
++        Reads only the 'labels' column (not latents) from every shard — fast
++        O(N_shards) reads of small integer tensors (~40KB/shard).
++
++        Returns:
++            'original'   — labels are IN-1K class ids 0..999; global max > 484.
++            'compressed' — labels are SR95 dense index 0..484; global max <= 484.
++
++        Note: Per-shard max is unreliable (shards may be class-sorted so early
++        shards only have low-valued labels).  Full global scan is required.
++        """
++        if not self.files:
++            return "original"
++        global_max = 0
++        for shard in self.files:
++            with safe_open(shard, framework="pt", device="cpu") as f:
++                # Read all labels in one call; labels tensor is tiny (<40 KB/shard).
++                shard_labels = f.get_slice("labels")[:]  # [N_shard]
++            shard_max = int(shard_labels.max().item())
++            if shard_max > global_max:
++                global_max = shard_max
++            if global_max > 484:
++                # Early exit: confirmed original schema, no need to scan rest.
++                break
++        schema = "original" if global_max > 484 else "compressed"
++        print(
++            f"[SR95 filter] detected label schema: {schema}"
++            f" (global_max_label={global_max})"
++        )
++        return schema
++
++    def _filter_sr95(self, sr95_ids: set) -> list:
++        """Return indices of samples whose label is in sr95_ids, then split.
++
++        Supports two label schemas:
++        - 'original':   labels are IN-1K ids 0..999 → filter by sr95_ids whitelist.
++        - 'compressed': labels are SR95 dense index 0..484 → all samples kept
++          (they already belong to the SR95 subset by construction).
++
++        Uses a disk cache keyed by the whitelist hash *and* schema to avoid
++        re-scanning the full shard set on every init.
++        Cache file lives in data_dir alongside latents_stats.pt.
++        """
++        schema = self._detect_label_schema()
++
++        whitelist_hash = hashlib.md5(
++            str(sorted(sr95_ids)).encode()
++        ).hexdigest()[:8]
++        cache_file = os.path.join(
++            self.data_dir,
++            f"sr95_valid_indices_{schema}_{whitelist_hash}.pt",
++        )
++
++        # --- cache hit path ---
++        if os.path.exists(cache_file):
++            cached = torch.load(cache_file, weights_only=False)
++            if "sr95_global" in cached:
++                sr95_global = cached["sr95_global"]
++                print(
++                    f"[SR95 filter] loaded cached {len(sr95_global)} samples"
++                    f" (schema={schema}) from {cache_file}"
++                )
++                dummy_labels = [0] * len(sr95_global)
++                return _compute_sr95_split_indices(
++                    sr95_global, dummy_labels, self.split
++                )
++
++        # --- cache miss: build valid index list ---
++        if schema == "compressed":
++            # All samples already belong to SR95 — no per-sample scan needed.
++            print(
++                f"[SR95 filter] compressed schema: keeping all"
++                f" {len(self._full_map)} samples (no whitelist scan)"
++            )
++            sr95_global = list(self._full_map.keys())
++        else:
++            # 'original' schema: per-sample label check against whitelist.
++            print(
++                f"[SR95 filter] original schema: scanning {len(self._full_map)}"
++                " samples (one-time, saves cache)..."
++            )
++            sr95_global = []
++            for global_idx, info in self._full_map.items():
++                safe_file = info["safe_file"]
++                i = info["idx_in_file"]
++                with safe_open(safe_file, framework="pt", device="cpu") as f:
++                    label_slice = f.get_slice("labels")
++                    label = int(label_slice[i : i + 1].squeeze())
++                if label in sr95_ids:
++                    sr95_global.append(global_idx)
++
++        # Save cache for all subsequent ranks / runs
++        torch.save({"sr95_global": sr95_global}, cache_file)
++        print(
++            f"[SR95 filter] saved cache ({len(sr95_global)} samples,"
++            f" schema={schema}) to {cache_file}"
++        )
++
++        # Deterministic 9:1 split
++        dummy_labels = [0] * len(sr95_global)  # labels not needed for split
++        return _compute_sr95_split_indices(sr95_global, dummy_labels, self.split)
++
++    # ------------------------------------------------------------------
++    # Latent statistics
++    # ------------------------------------------------------------------
++
+     def get_latent_stats(self):
+-        latent_stats_cache_file = os.path.join(self.data_dir, "latents_stats.pt")
+-        if not os.path.exists(latent_stats_cache_file):
+-            latent_stats = self.compute_latent_stats()
+-            torch.save(latent_stats, latent_stats_cache_file)
++        """Load or compute per-channel mean/std for normalisation."""
++        cache = os.path.join(self.data_dir, "latents_stats.pt")
++        if not os.path.exists(cache):
++            stats = self._compute_latent_stats()
++            torch.save(stats, cache)
+         else:
+-            latent_stats = torch.load(latent_stats_cache_file)
+-        return latent_stats['mean'], latent_stats['std']
+-    
+-    def compute_latent_stats(self):
+-        num_samples = min(10000, len(self.img_to_file_map))
+-        random_indices = np.random.choice(len(self.img_to_file_map), num_samples, replace=False)
++            stats = torch.load(cache)
++        return stats["mean"], stats["std"]
++
++    def _compute_latent_stats(self) -> dict:
++        """Estimate latent stats from up to 10 000 random samples."""
++        n = min(10000, len(self.valid_indices))
++        chosen = np.random.choice(self.valid_indices, n, replace=False)
+         latents = []
+-        for idx in tqdm(random_indices):
+-            img_info = self.img_to_file_map[idx]
+-            safe_file, img_idx = img_info['safe_file'], img_info['idx_in_file']
++        for idx in tqdm(chosen, desc="Computing latent stats"):
++            info = self._full_map[idx]
++            safe_file, img_idx = info["safe_file"], info["idx_in_file"]
+             with safe_open(safe_file, framework="pt", device="cpu") as f:
+-                features = f.get_slice('latents')
+-                feature = features[img_idx:img_idx+1]
+-                latents.append(feature)
+-        latents = torch.cat(latents, dim=0)
+-        mean = latents.mean(dim=[0, 2, 3], keepdim=True)
+-        std = latents.std(dim=[0, 2, 3], keepdim=True)
+-        latent_stats = {'mean': mean, 'std': std}
+-        print(latent_stats)
+-        return latent_stats
+-
+-    def __len__(self):
+-        return len(self.img_to_file_map.keys())
+-
+-    def __getitem__(self, idx):
+-        img_info = self.img_to_file_map[idx]
+-        safe_file, img_idx = img_info['safe_file'], img_info['idx_in_file']
++                features = f.get_slice("latents")
++                latents.append(features[img_idx : img_idx + 1])
++        latents = torch.cat(latents, dim=0)  # [n, C, H, W]
++        mean = latents.mean(dim=[0, 2, 3], keepdim=True)  # [1, C, 1, 1]
++        std = latents.std(dim=[0, 2, 3], keepdim=True)    # [1, C, 1, 1]
++        stats = {"mean": mean, "std": std}
++        print(stats)
++        return stats
++
++    # ------------------------------------------------------------------
++    # Dataset interface
++    # ------------------------------------------------------------------
++
++    def __len__(self) -> int:
++        return len(self.valid_indices)
++
++    def __getitem__(self, idx: int):
++        """Return (latent_tensor, label) for sample at position idx."""
++        global_idx = self.valid_indices[idx]
++        info = self._full_map[global_idx]
++        safe_file, img_idx = info["safe_file"], info["idx_in_file"]
+         with safe_open(safe_file, framework="pt", device="cpu") as f:
+             tensor_key = "latents" if np.random.uniform(0, 1) > 0.5 else "latents_flip"
+             features = f.get_slice(tensor_key)
+-            labels = f.get_slice('labels')
+-            feature = features[img_idx:img_idx+1]
+-            label = labels[img_idx:img_idx+1]
++            labels = f.get_slice("labels")
++            feature = features[img_idx : img_idx + 1]  # [1, C, H, W]
++            label = labels[img_idx : img_idx + 1]      # [1]
+ 
+         if self.latent_norm:
+             feature = (feature - self._latent_mean) / self._latent_std
+         feature = feature * self.latent_multiplier
+-        
+-        # remove the first batch dimension (=1) kept by get_slice()
+-        feature = feature.squeeze(0)
+-        label = label.squeeze(0)
+-        return feature, label
+\ No newline at end of file
++        feature = feature.squeeze(0)  # [C, H, W]
++        label = label.squeeze(0)      # scalar
++        return feature, label
++
++    # Legacy property kept for backward compat (callers using .img_to_file_map)
++    @property
++    def img_to_file_map(self) -> dict:  # noqa: D401
++        """Full (unfiltered) global index map — legacy access."""
++        return self._full_map
++
++
++class PixelImageNetDataset(Dataset):
++    """Raw pixel ImageNet dataset with SR95 whitelist filter + train/val split.
++
++    Images are loaded from an ImageFolder-style root directory,
++    resized/cropped to 256×256, and normalised to [-1, 1].
++
++    Args:
++        root: Path to ImageNet ``train/`` directory (ImageFolder layout).
++        sr95_filter: Restrict to SR95 whitelist classes when True.
++        split: 'train' (90%) or 'val' (10%) of SR95 subset.
++        image_size: Target spatial resolution (default 256).
++        whitelist_path: Path to ``imagenet_sr95_whitelist.json``.
++    """
++
++    _DEFAULT_WHITELIST = (
++        ""
++    )
++
++    def __init__(
++        self,
++        root: str = "",
++        sr95_filter: bool = True,
++        split: str = "train",
++        image_size: int = 256,
++        whitelist_path: str = _DEFAULT_WHITELIST,
++        use_hflip: bool = False,  # H7_HFLIP_FIX
++    ) -> None:
++        self.root = root
++        self.sr95_filter = sr95_filter
++        self.split = split
++        self.image_size = image_size
++
++        _tf_list = [
++            transforms.Resize(image_size),
++            transforms.CenterCrop(image_size),
++        ]
++        if use_hflip:  # H7_HFLIP_FIX
++            _tf_list.append(transforms.RandomHorizontalFlip(p=0.5))
++        _tf_list += [
++            transforms.ToTensor(),
++            transforms.Normalize([0.5, 0.5, 0.5], [0.5, 0.5, 0.5]),
++        ]
++        self.transform = transforms.Compose(_tf_list)
++
++        # Build flat sample list: (img_path, class_id)
++        self._samples, self._class_to_idx = self._scan_root()
++
++        if sr95_filter:
++            sr95_ids = _load_sr95_class_ids(whitelist_path)
++            self.valid_indices = self._filter_and_split(sr95_ids)
++        else:
++            self.valid_indices = list(range(len(self._samples)))
++
++    # ------------------------------------------------------------------
++    # Internal helpers
++    # ------------------------------------------------------------------
++
++    def _scan_root(self):
++        """Enumerate ImageFolder-layout root into flat sample list.
++
++        Returns:
++            samples: list of (img_path: str, class_id: int)
++            class_to_idx: dict[synset_name -> class_id]
++        """
++        root_path = Path(self.root)
++        synsets = sorted(p.name for p in root_path.iterdir() if p.is_dir())
++        class_to_idx = {s: i for i, s in enumerate(synsets)}
++        samples = []
++        for synset in synsets:
++            cls_id = class_to_idx[synset]
++            cls_dir = root_path / synset
++            for img_path in sorted(cls_dir.iterdir()):
++                if img_path.suffix.lower() in {".jpg", ".jpeg", ".png", ".webp"}:
++                    samples.append((str(img_path), cls_id))
++        return samples, class_to_idx
++
++    def _filter_and_split(self, sr95_ids: set) -> list:
++        """Return sample indices for SR95 classes then apply 9:1 split."""
++        sr95_indices = [
++            i for i, (_, cls_id) in enumerate(self._samples) if cls_id in sr95_ids
++        ]
++        labels = [self._samples[i][1] for i in sr95_indices]
++        return _compute_sr95_split_indices(sr95_indices, labels, self.split)
++
++    # ------------------------------------------------------------------
++    # Dataset interface
++    # ------------------------------------------------------------------
++
++    def __len__(self) -> int:
++        return len(self.valid_indices)
++
++    def __getitem__(self, idx: int):
++        """Return (img_tensor [3, H, W] in [-1,1], label) for index idx."""
++        sample_idx = self.valid_indices[idx]
++        img_path, label = self._samples[sample_idx]
++        img = Image.open(img_path).convert("RGB")
++        img_tensor = self.transform(img)  # [3, image_size, image_size]
++        return img_tensor, label
+diff --git a/models/lightningdit.py b/models/lightningdit.py
+index dcc7780..8dbfd03 100644
+--- a/models/lightningdit.py
++++ b/models/lightningdit.py
+@@ -501,15 +501,24 @@ def LightningDiT_XL_1(**kwargs):
+ def LightningDiT_XL_2(**kwargs):
+     return LightningDiT(depth=28, hidden_size=1152, patch_size=2, num_heads=16, **kwargs)
+ 
++def LightningDiT_XL_16(**kwargs):
++    return LightningDiT(depth=28, hidden_size=1152, patch_size=16, num_heads=16, **kwargs)
++
+ def LightningDiT_L_2(**kwargs):
+     return LightningDiT(depth=24, hidden_size=1024, patch_size=2, num_heads=16, **kwargs)
+ 
++def LightningDiT_L_1(**kwargs):
++    return LightningDiT(depth=24, hidden_size=1024, patch_size=1, num_heads=16, **kwargs)
++
+ def LightningDiT_B_1(**kwargs):
+     return LightningDiT(depth=12, hidden_size=768, patch_size=1, num_heads=12, **kwargs)
+ 
+ def LightningDiT_B_2(**kwargs):
+     return LightningDiT(depth=12, hidden_size=768, patch_size=2, num_heads=12, **kwargs)
+ 
++def LightningDiT_B_16(**kwargs):
++    return LightningDiT(depth=12, hidden_size=768, patch_size=16, num_heads=12, **kwargs)
++
+ def LightningDiT_1p0B_1(**kwargs):
+     return LightningDiT(depth=24, hidden_size=1536, patch_size=1, num_heads=24, **kwargs)
+ 
+@@ -523,9 +532,9 @@ def LightningDiT_1p6B_2(**kwargs):
+     return LightningDiT(depth=28, hidden_size=1792, patch_size=2, num_heads=28, **kwargs)
+ 
+ LightningDiT_models = {
+-    'LightningDiT-B/1': LightningDiT_B_1, 'LightningDiT-B/2': LightningDiT_B_2,
+-    'LightningDiT-L/2': LightningDiT_L_2,
+-    'LightningDiT-XL/1': LightningDiT_XL_1, 'LightningDiT-XL/2': LightningDiT_XL_2,
++    'LightningDiT-B/1': LightningDiT_B_1, 'LightningDiT-B/2': LightningDiT_B_2, 'LightningDiT-B/16': LightningDiT_B_16,
++    'LightningDiT-L/1': LightningDiT_L_1, 'LightningDiT-L/2': LightningDiT_L_2,
++    'LightningDiT-XL/1': LightningDiT_XL_1, 'LightningDiT-XL/2': LightningDiT_XL_2, 'LightningDiT-XL/16': LightningDiT_XL_16,
+     'LightningDiT-1p0B/1': LightningDiT_1p0B_1, 'LightningDiT-1p0B/2': LightningDiT_1p0B_2,
+     'LightningDiT-1p6B/1': LightningDiT_1p6B_1, 'LightningDiT-1p6B/2': LightningDiT_1p6B_2,
+ }
+\ No newline at end of file
+diff --git a/transport/__init__.py b/transport/__init__.py
+index 51225bc..8430f49 100644
+--- a/transport/__init__.py
++++ b/transport/__init__.py
+@@ -11,6 +11,8 @@ def create_transport(
+     partitial_train=None,
+     partial_ratio=1.0,
+     shift_lg=False,
++    alpha_train=1.0,
++    t_eps=0.05,
+ ):
+     """function for creating Transport object
+     **Note**: model prediction defaults to velocity
+@@ -22,12 +24,16 @@ def create_transport(
+     - likelihood_weighted: weight loss by likelihood weight
+     - train_eps: small epsilon for avoiding instability during training
+     - sample_eps: small epsilon for avoiding instability during sampling
++    - alpha_train: protocol v1 training-time shift s(alpha, u) = alpha*u/(1+(alpha-1)*u).
++      Default 1.0 = identity (backward compatible). Mirrors sampling-side timestep_shift.
+     """
+ 
+     if prediction == "noise":
+         model_type = ModelType.NOISE
+     elif prediction == "score":
+         model_type = ModelType.SCORE
++    elif prediction == "x_prediction":
++        model_type = ModelType.X_PREDICTION
+     else:
+         model_type = ModelType.VELOCITY
+ 
+@@ -49,10 +55,12 @@ def create_transport(
+     if (path_type in [PathType.VP]):
+         train_eps = 1e-5 if train_eps is None else train_eps
+         sample_eps = 1e-3 if train_eps is None else sample_eps
+-    elif (path_type in [PathType.GVP, PathType.LINEAR] and model_type != ModelType.VELOCITY):
++    elif (path_type in [PathType.GVP, PathType.LINEAR]
++          and model_type not in [ModelType.VELOCITY, ModelType.X_PREDICTION]):
++        # avoid numerical issue for non-velocity-like predictions on GVP/LINEAR paths
+         train_eps = 1e-3 if train_eps is None else train_eps
+         sample_eps = 1e-3 if train_eps is None else sample_eps
+-    else: # velocity & [GVP, LINEAR] is stable everywhere
++    else: # velocity & x_prediction on [GVP, LINEAR] are stable everywhere
+         train_eps = 0
+         sample_eps = 0
+     
+@@ -68,6 +76,8 @@ def create_transport(
+         partitial_train=partitial_train,
+         partial_ratio=partial_ratio,
+         shift_lg=shift_lg,
++        alpha_train=alpha_train,
++        t_eps=t_eps,
+     )
+     
+     return state
+\ No newline at end of file
+diff --git a/transport/transport.py b/transport/transport.py
+index ae08073..459ad76 100644
+--- a/transport/transport.py
++++ b/transport/transport.py
+@@ -17,6 +17,7 @@ class ModelType(enum.Enum):
+     NOISE = enum.auto()  # the model predicts epsilon
+     SCORE = enum.auto()  # the model predicts \nabla \log p(x)
+     VELOCITY = enum.auto()  # the model predicts v(x)
++    X_PREDICTION = enum.auto()  # the model predicts x_0 (clean data); pixel-rep FM path
+ 
+ class PathType(enum.Enum):
+     """
+@@ -52,6 +53,8 @@ class Transport:
+         partitial_train=None,
+         partial_ratio=1.0,
+         shift_lg=False,
++        alpha_train: float = 1.0,
++        t_eps: float = 0.05,
+     ):
+         path_options = {
+             PathType.LINEAR: path.ICPlan,
+@@ -69,6 +72,14 @@ class Transport:
+         self.partitial_train = partitial_train
+         self.partial_ratio = partial_ratio
+         self.shift_lg = shift_lg
++        # alpha_train: protocol v1 training-time shift. s(alpha, u) = alpha*u / (1 + (alpha-1)*u)
++        # alpha_train == 1.0 -> identity, backward-compat. Mirrors sampling-side compute_tm in
++        # integrators.py (which uses `timestep_shift` as alpha_sample).
++        self.alpha_train = float(alpha_train)
++        # t_eps: clamp denominator (1-t) from below when converting x_pred -> v during sampling.
++        # Prevents div-by-zero as t -> 1. Protocol §4.3: v = (x_pred - z_t) / (1-t).clamp_min(t_eps).
++        # Only used when model_type == ModelType.X_PREDICTION. Default 0.05 per protocol.
++        self.t_eps = float(t_eps)
+ 
+     def prior_logp(self, z):
+         '''
+@@ -100,9 +111,9 @@ class Transport:
+             t1 = 1 - eps if (not sde or last_step_size == 0) else 1 - last_step_size
+ 
+         elif (type(self.path_sampler) in [path.ICPlan, path.GVPCPlan]) \
+-            and (self.model_type != ModelType.VELOCITY or sde): # avoid numerical issue by taking a first semi-implicit step
++            and (self.model_type not in [ModelType.VELOCITY, ModelType.X_PREDICTION] or sde): # avoid numerical issue by taking a first semi-implicit step
+ 
+-            t0 = eps if (diffusion_form == "SBDM" and sde) or self.model_type != ModelType.VELOCITY else 0
++            t0 = eps if (diffusion_form == "SBDM" and sde) or self.model_type not in [ModelType.VELOCITY, ModelType.X_PREDICTION] else 0
+             t1 = 1 - eps if (not sde or last_step_size == 0) else 1 - last_step_size
+         
+         if reverse:
+@@ -113,7 +124,7 @@ class Transport:
+     def sample_logit_normal(self, mu, sigma, size=1):
+         # Generate samples from the normal distribution
+         samples = norm.rvs(loc=mu, scale=sigma, size=size)
+-        
++
+         # Transform samples to be in the range (0, 1) using the logistic function
+         samples = 1 / (1 + np.exp(-samples))
+ 
+@@ -122,6 +133,24 @@ class Transport:
+ 
+         return samples
+ 
++    def _apply_alpha_train_shift(self, u: th.Tensor) -> th.Tensor:
++        """Apply protocol v1 training-time shift s(alpha, u) = alpha*u / (1 + (alpha-1)*u).
++
++        Same formula as integrators.py:compute_tm used for sampling-side timestep_shift.
++        alpha_train == 1.0 -> identity (returns u unchanged).
++        alpha_train > 1.0 -> pushes t toward 1 (clean-data end in LDiT convention).
++        alpha_train < 1.0 -> pushes t toward 0 (noise end).
++
++        Args:
++            u: [B] tensor in (0, 1) — e.g. from logit-normal sampling.
++        Returns:
++            [B] tensor in (0, 1), shifted per s(alpha_train, u).
++        """
++        if self.alpha_train == 1.0:
++            return u
++        a = self.alpha_train
++        return (a * u) / (1.0 + (a - 1.0) * u)
++
+     def sample_in_range(self, mu, sigma, target_size, range_min=0, range_max=0.5):
+         samples = []
+         while len(samples) < target_size:
+@@ -152,10 +181,14 @@ class Transport:
+                 if self.partitial_train is not None and th.rand(1) < self.partial_ratio:
+                     t = self.sample_in_range(0, 1, x1.shape[0], range_min=self.partitial_train[0], range_max=self.partitial_train[1])
+                 else:
+-                    t = self.sample_logit_normal(0, 1, size=x1.shape[0]) * (t1 - t0) + t0
++                    u = self.sample_logit_normal(0, 1, size=x1.shape[0])  # [B], in (0, 1)
++                    u = self._apply_alpha_train_shift(u)                   # [B], protocol v1 alpha_train
++                    t = u * (t1 - t0) + t0
+             else:
+                 assert self.partitial_train is None, "Shifted lognormal distribution is not compatible with partial training"
+-                t = self.sample_logit_normal(shifted_mu, 1, size=x1.shape[0]) * (t1 - t0) + t0
++                u = self.sample_logit_normal(shifted_mu, 1, size=x1.shape[0])  # [B]
++                u = self._apply_alpha_train_shift(u)                           # [B]
++                t = u * (t1 - t0) + t0
+         
+         # overwrite t if sp_timesteps is provided (for validation)
+         if sp_timesteps is not None:
+@@ -195,7 +228,12 @@ class Transport:
+             terms['loss'] = mean_flat(((model_output - ut) ** 2))
+             if self.use_cosine_loss:
+                 terms['cos_loss'] = mean_flat(1 - th.nn.functional.cosine_similarity(model_output, ut, dim=1))
+-        else: 
++        elif self.model_type == ModelType.X_PREDICTION:
++            # Protocol §4.3: model predicts x_0 directly.
++            # Loss = ||x_pred - x_1||^2  (x_1 is clean data in LDiT's convention where x1=data).
++            # Note: in LDiT's path.ICPlan, x1 is the data sample and x0 is noise.
++            terms['loss'] = mean_flat((model_output - x1) ** 2)  # x1: [B, *dim] clean data
++        else:
+             _, drift_var = self.path_sampler.compute_drift(xt, t)
+             sigma_t, _ = self.path_sampler.compute_sigma_t(path.expand_t_like_x(t, xt))
+             if self.loss_type in [WeightType.VELOCITY]:
+@@ -206,12 +244,12 @@ class Transport:
+                 weight = 1
+             else:
+                 raise NotImplementedError()
+-            
++
+             if self.model_type == ModelType.NOISE:
+                 terms['loss'] = mean_flat(weight * ((model_output - x0) ** 2))
+             else:
+                 terms['loss'] = mean_flat(weight * ((model_output * sigma_t + x0) ** 2))
+-                
++
+         return terms
+     
+ 
+@@ -235,10 +273,24 @@ class Transport:
+             model_output = model(x, t, **model_kwargs)
+             return model_output
+ 
++        def x_prediction_ode(x, t, model, **model_kwargs):
++            # x: [B, *dim] noisy sample z_t at time t
++            # model predicts x_0 (clean data).
++            # Protocol §4.3: v = (x_pred - z_t) / (1 - t).clamp_min(t_eps)
++            # LDiT convention: t=1 is clean data, t=0 is noise. ODE goes from t=0->1 (noise->data).
++            # In ODE: dz/dt = v(z, t). At t near 1, denom -> 0; clamp_min prevents div-by-zero.
++            x_pred = model(x, t, **model_kwargs)  # [B, *dim] predicted x_0
++            t_expand = path.expand_t_like_x(t, x)  # [B, 1, 1, ...] broadcast-ready
++            denom = (1.0 - t_expand).clamp(min=self.t_eps)  # [B, 1, 1, ...]
++            v = (x_pred - x) / denom  # [B, *dim] velocity
++            return v
++
+         if self.model_type == ModelType.NOISE:
+             drift_fn = noise_ode
+         elif self.model_type == ModelType.SCORE:
+             drift_fn = score_ode
++        elif self.model_type == ModelType.X_PREDICTION:
++            drift_fn = x_prediction_ode
+         else:
+             drift_fn = velocity_ode
+         
+@@ -261,9 +313,18 @@ class Transport:
+             score_fn = lambda x, t, model, **kwagrs: model(x, t, **kwagrs)
+         elif self.model_type == ModelType.VELOCITY:
+             score_fn = lambda x, t, model, **kwargs: self.path_sampler.get_score_from_velocity(model(x, t, **kwargs), x, t)
++        elif self.model_type == ModelType.X_PREDICTION:
++            # Derive velocity from x_pred then get score via path_sampler.
++            def _x_pred_score(x, t, model, **kwargs):
++                x_pred = model(x, t, **kwargs)  # [B, *dim]
++                t_expand = path.expand_t_like_x(t, x)
++                denom = (1.0 - t_expand).clamp(min=self.t_eps)
++                v = (x_pred - x) / denom  # [B, *dim]
++                return self.path_sampler.get_score_from_velocity(v, x, t)
++            score_fn = _x_pred_score
+         else:
+             raise NotImplementedError()
+-        
++
+         return score_fn
+ 
+ 

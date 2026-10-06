@@ -1,0 +1,14 @@
+__pycache__/
+*.py[cod]
+*.egg-info/
+.venv/
+build/
+dist/
+/data/
+/runs/
+*.pt
+!examples/mnist_class/selected.pt
+*.tar
+*.log
+/*.tar.gz
+/.local_archive/

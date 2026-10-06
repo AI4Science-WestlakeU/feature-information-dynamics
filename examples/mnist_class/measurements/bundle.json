@@ -1,0 +1,17 @@
+{
+  "schema_version": "0.1",
+  "files": {
+    "errors.npy": {
+      "sha256": "2e8aac25c5400f7656f8b90c4f3935bb88d4e92541213f766f5fbbabfbea06a9",
+      "bytes": 5280128
+    },
+    "metadata.json": {
+      "sha256": "03e937446afd1ef8269fa4d89126a98763b899774c799fbb8b19a074450908fc",
+      "bytes": 2258
+    },
+    "samples.json": {
+      "sha256": "402daac9bfb2ab68e92e3013da0530c934690cc3b4a30f74460a1c492e605e9a",
+      "bytes": 568893
+    }
+  }
+}

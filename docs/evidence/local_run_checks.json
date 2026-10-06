@@ -1,0 +1,18 @@
+{
+  "passed": true,
+  "scope": "local code execution and CLI checks; no additional real-data downloads",
+  "system": "Windows",
+  "python": "3.12.14",
+  "tests": {
+    "passed": 45,
+    "elapsed_seconds": 24.414
+  },
+  "cli_checks": [
+    "feature_information_dynamics.cli --help",
+    "feature_information_dynamics.data.releases --help",
+    "feature_information_dynamics.workflows --help"
+  ],
+  "existing_actual_data_readers": "downloaded_data_readers.json",
+  "limits": "CPU tests and entrypoints; full production training was not repeated",
+  "download_verification": "further checks cancelled by user; upload remains authorized"
+}

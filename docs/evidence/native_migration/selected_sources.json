@@ -1,0 +1,101 @@
+{
+  "src/feature_information_dynamics/rae/train.py": {
+    "source": "scripts/train_m06_upstream_rae_film_advanced.py",
+    "sha256": "0300dd1872468fd7100bb191c8b81f8413917ca09489bfe08937a453722fbc09",
+    "preserved_function_ast_sha256": {
+      "RAE_M06": "4400cb574efeb269dbb196c6878a9f87d710d98f9cabde704b4cb9fdd5463176",
+      "evaluate_deterministic": "94cdeb4edc396ed39fc066751a59e0f957b56cd76145eda6c5935b8983c9d550",
+      "update_ema": "c21ca636548850e31d7b205967fedee4889bd10715475644c4aa1ffeb08cb649",
+      "do_train": "511c20afe7d64f198dea41616b629eecd05c2e61d547a91fb76d85a376b722ca"
+    },
+    "ported_file_sha256": "3434588ddbd92916fade2abdb519f6797019ee077ba85e3e7123b0366cbadc6e"
+  },
+  "src/feature_information_dynamics/rae/evaluate.py": {
+    "source": "scripts/eval_m06_rae_canny_mmse_FILM.py",
+    "sha256": "2765e699e57dcf0e7d8d158191758489d7a8c03a49672ad6aef7f1f9ba6af1b6",
+    "preserved_function_ast_sha256": {
+      "parse_args": "1be5250d53210c8499064e23791caebe649ed6805e1c2cdb694f8c3251c69024",
+      "setup_dist": "c2a739a4d3160d949bd5383ffe60191ed90e33466e2bb49d9a7ce2176f84b66c",
+      "_load_rae_stage1_from_config": "0e54b4c142fe449156a62722f7452aa3f25c7059466c2d00a5aa3c0962549a81",
+      "build_rae_model": "418fc86b10ef4913e89c2e0707a23f033753c8c96ace847e9b368daf8ad991ba",
+      "load_eval_subset": "23075ae88ae3dea7968e2b6e6bedc36143a42bc181527b0910f1cce8d872566c",
+      "_RAE_M06_CannyAdapter": "98978772e51d431956f189db3c07eec2a4c960771d2f5b38e9d67d97f7ce9bad",
+      "make_mode_kwargs_fn": "06671689aaf237e4f1d5ed38acb85586fc2e89f52aa433428f2daa21448d1680",
+      "make_rae_model_forward_fn": "8073ca9a38d2bbcf103667ae3b90384af9f158256f28863b069d52a77aa53314",
+      "main": "897960f1882bdbe8ef1f3f76f8e23365298f72b70304103ecb494ba89633e76c"
+    },
+    "ported_file_sha256": "e71d25f16ad4845cc7c0559ae4453d381d7d83a9c5444107c7410de4f0577dd9"
+  },
+  "src/feature_information_dynamics/sdvae/train.py": {
+    "source": "scripts/train_m06_upstream_sdvae_online_film_advanced.py",
+    "sha256": "3db97e5c27d192506d817540dd7c7e1600c8c840061f750d765dd8365b167887",
+    "preserved_function_ast_sha256": {
+      "SiT_M06_FiLM": "bcbe9d0275c420e14ff62a6dcc309d1af788b137090919807ec408d30f100c58",
+      "evaluate_deterministic": "44aa6572d912ba06cd49991a80db7d226a428e36606ca71ac6b9037556f0931c",
+      "update_ema": "a10b07ef3ce6c2d3004388b4513fd50f215e2a97a3a21caaa106faaba966eec2",
+      "do_train": "b5b80f02c79481a25e929b62c4ff1657ea382d9d9665ef64c9a931d6d3025813"
+    },
+    "remote_source_sha256": "d3c2badc933d68dd826b66dd30f6d384893c1ec05a2b1c17be16fd2d30e6da2a",
+    "ported_file_sha256": "d21a7dfb5f615926ce3f1da1cea0dea1f8f5470e318072f1ab73021458a53f85"
+  },
+  "src/feature_information_dynamics/sdvae/evaluate.py": {
+    "source": "scripts/eval_m06_sit_mmse_online_FILM.py",
+    "sha256": "04281a1d0239e9cb63e4e2f9ed118fbff20521e740d751532d488b9d53e6d917",
+    "preserved_function_ast_sha256": {
+      "center_crop_arr": "3f07ff236e3db4d3747edd7e6bb28531c2f436b91de62cfce4e4dd36bd11acc8",
+      "_rel_path": "ed7d08d60925f730ea45a0ab47e20cb73bf91be24beb39096e535a0ee7480b0e",
+      "WhitelistedImageFolder": "25aca5319f76932c59e5a18a5c36ba39772efec19bcb10f766cec0a6354aebf0",
+      "build_eval_rgb_dataset": "e01b348977428ac9dce6713cc9d55a4b38d27b302ff2daf3f5a1333956d204f7",
+      "parse_args": "7916c4bfe9ce6a60c8f20bb6491c677b805f9cf88e39b6b5214aa08e275dfc6d",
+      "setup_dist": "c2a739a4d3160d949bd5383ffe60191ed90e33466e2bb49d9a7ce2176f84b66c",
+      "load_config": "3148bb8fc4eaa03a0aa6c1a4773b24ff660e33fe816fecc843682c12c1a63f8a",
+      "_validate_config_for_online": "869a2e3da7324d8b37d2d2fa43d666a7a9750e7af4ac4940b24038fbf8e6b39d",
+      "_check_mode_supported": "592308bf972b45003d162e1931ad7f251bc0a465774a9054716ed97ecba44dc7",
+      "_check_chain_arch": "54aeb3befe0cd12e5a3f7fcfe531c0d2f572324969ccf5bae49d44f1c98bedf2",
+      "load_vae": "93d9f2dd433a271900fbe8c67c23954fc0310fbcdea814a434b8e0e145f1dc8d",
+      "_detect_sit_ckpt_arch": "b39563754ed754611c8e12c828f89eab8987d6be607c102f73dad79f540cc0fc",
+      "build_sit_model": "db8496519de3804cc6e22a2dc73e59b255df378186b3d21ccd6d887ed3c81d4e",
+      "load_eval_online": "09942d486575507fe7bd1e3be84c43248071ba45098aca94a8336643e8fc9c7f",
+      "make_sit_m06_forward_fn": "de416568571851743586f6dc12c93a461b945b7e6337d8e20550dc3d5aff949b",
+      "save_outputs": "683bade1cf2f50cb6da3626a098f22b9932f12a04e260f4fd7f159aa70644b3e",
+      "main": "eac2e0cfa8170fdb176c26ec2fded6f8514c1d557bc6ea7b56f2b77eed641392"
+    },
+    "ported_file_sha256": "40acf12e13937c341d6a106285e8c79147ddad92b4f810eca8eb75b54497e524"
+  },
+  "src/feature_information_dynamics/vavae/train.py": {
+    "source": "scripts/train_m06_upstream_film_advanced.py",
+    "sha256": "ee188124b62d4eb526f27c1146b464b74595031ab898d82c5fe64c15922f8354",
+    "preserved_function_ast_sha256": {
+      "VAVAE_M06_FiLM": "b39dfba3d11371a839ac7f2d11ed604962dbce1b8ddbf3ea38f6c8741a351d49",
+      "evaluate_deterministic": "a4ffb425b2cef26a7e6087ada839a7673932691d2b439153e795625dfbf2a607",
+      "update_ema": "f1463dc4a2660c204319ab7ec42cd24d4d9e12e823661d87ea67b628560c243d",
+      "do_train": "480db21ab6ab49ee9d97297ac8b2483512eab069ce5c8a09aaf5e5f4275d0018"
+    },
+    "ported_file_sha256": "146faef52086239e2b6e98cb82f459075f01f28f000c822768fbcc810a732c0a"
+  },
+  "src/feature_information_dynamics/vavae/evaluate.py": {
+    "source": "scripts/eval_m06_vavae_canny_mmse_FILM.py",
+    "sha256": "8f2fee9d0022dc2011e83e6bb8a70cfee25c660a8a5adf0205a611466874c87f",
+    "preserved_function_ast_sha256": {
+      "parse_args": "0b728b0991a183a133d70cd924deee40b513058ca2c916e8832cb6d6058daf15",
+      "setup_dist": "c2a739a4d3160d949bd5383ffe60191ed90e33466e2bb49d9a7ce2176f84b66c",
+      "_detect_ckpt_arch": "aca192f25deef53a6d8e0022cda266191cbd1564b5e3f7063eb9005cd8deddb4",
+      "_M06UpstreamAdapter": "26009add9c63bf9830ff04bbc67d4445ee1eeb49ae72bd0e62d2bb63868b2a75",
+      "_build_m06_upstream_net": "dff9d0b04761bdabd87e84ef17249ad95ce68210d6aa6f3082b90423b5bad231",
+      "build_vavae_model": "77b34bee419a14b0cee829f2408661d71bc49d442135d80618d17a7b120fdfaa",
+      "load_eval_shard": "3023d80898b8a36a837e2cecfd1e0795a5a82deca9b644fc309d0ecaec0151c1",
+      "make_mode_kwargs_fn": "a95ac44af8093ab8cffd8aae7aa91c1aae7f476cb5443734cb15a2527cf0543d",
+      "make_model_forward_fn": "42a27f78bd57e5c60d8bc11706aa6bb1221b06f21cf9fac80383079c4e460fc9",
+      "main": "fb93579afd6a8f9e2b02fc657e4655d2fcd288d73e9680e427acf74bdf546b12"
+    },
+    "ported_file_sha256": "0de1fc93ce1a628e0ad4db547bd7534565d5bebdc53535b494485e9bbf8df7b6"
+  },
+  "src/feature_information_dynamics/vavae/extract_latents.py": {
+    "source": "scripts/extract_latents_with_filenames.py",
+    "sha256": "24bb379cddd4f69db24f96172cbfb4ea01628713da9e6e39d2165a46cc7272a4",
+    "ported_file_sha256": "fe2e6c78bca4e141053d188694ba5e6a6955df8dcb8152a493dd80a57e3dff67",
+    "portability_and_correctness_changes": [
+      "Explicit .pt checkpoint now overrides architecture YAML ckpt_path; original helper ignored requested .pt path. Native posterior sampling, crop, flip, statistics and scaling preserved."
+    ]
+  }
+}

@@ -1,0 +1,7 @@
+{
+  "sha256": "91c83f4f8a4574c7dfe560d0724aaec4a1003291cf66e1ebeac13aa0c609fa71",
+  "size_bytes": 8551936,
+  "architecture": "SharedDenoiser(channels=48)",
+  "training_updates": 100000,
+  "origin": "Our from-scratch MNIST training; no external feature model"
+}

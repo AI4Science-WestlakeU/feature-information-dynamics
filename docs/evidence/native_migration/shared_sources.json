@@ -1,0 +1,88 @@
+[
+  {
+    "source": "did_q01/scripts/raw_image_mask_canny_dataset.py",
+    "source_sha256": "8c91392c2395cbb06a6445fbfd541e3bec59a4ece0462d41745fdb384cd4f84f",
+    "target": "src/feature_information_dynamics/native/data/raw_image_mask_canny_dataset.py",
+    "target_sha256": "d3bf1629c18b5f8cac20076a5c63396d469c1bb99af80597491cc191b30be9cc",
+    "calculation_ast_equal": true,
+    "changes": [
+      "qualified local imports",
+      "removed standalone private demo",
+      "portable example paths",
+      "corrected documentation only; calculation unchanged"
+    ]
+  },
+  {
+    "source": "did_q01/scripts/whitelisted_img_latent_dataset.py",
+    "source_sha256": "413c6ae0084dd76419acb239e585c33f46be5e83ca48320a6a68b77ae9fb916b",
+    "target": "src/feature_information_dynamics/native/data/whitelisted_img_latent_dataset.py",
+    "target_sha256": "758290bf3c1dac59afa0fdb4a9486d2fedb307b0c6358932f82783b80fdc11b6",
+    "calculation_ast_equal": true,
+    "changes": [
+      "qualified local imports",
+      "removed standalone private demo",
+      "portable example paths"
+    ]
+  },
+  {
+    "source": "did_q01/scripts/sharded_mask_dataset.py",
+    "source_sha256": "2b385642b861bc730d694da101376a7489cb1d5bb3970b1b6895430a8001c8ef",
+    "target": "src/feature_information_dynamics/native/data/sharded_mask_dataset.py",
+    "target_sha256": "183682a2cb918886223c9ab13790deca3765869815e39eee7882010ac4d6ba35",
+    "calculation_ast_equal": true,
+    "changes": [
+      "qualified local imports",
+      "removed standalone private demo",
+      "portable example paths"
+    ]
+  },
+  {
+    "source": "did_q01/scripts/sharded_mask_canny_dataset.py",
+    "source_sha256": "d6efbc61f875577eeee5399dc00228c930b190c7de5a1e81bd4cc9157f5eb281",
+    "target": "src/feature_information_dynamics/native/data/sharded_mask_canny_dataset.py",
+    "target_sha256": "16e62a4a01ef3156ec8b37ec4c0aab84bddf2e62bce9072790b3317c9e33a30d",
+    "calculation_ast_equal": true,
+    "changes": [
+      "qualified local imports",
+      "removed standalone private demo",
+      "portable example paths"
+    ]
+  },
+  {
+    "source": "did_q01/scripts/paired_latent_mask_dataset.py",
+    "source_sha256": "8b796de4be7393c660b7d734232013fa407daa8aaab46a4ce843459a7d4923ce",
+    "target": "src/feature_information_dynamics/native/data/paired_latent_mask_dataset.py",
+    "target_sha256": "dfa12997860a9a7ebc24d467f9badcbf6164ba64a5e3ad1693a3b8aa7e4b95d4",
+    "calculation_ast_equal": true,
+    "changes": [
+      "qualified local imports",
+      "removed standalone private demo",
+      "portable example paths"
+    ]
+  },
+  {
+    "source": "did_q01/scripts/train_lib_mask_patch.py",
+    "source_sha256": "9ac7492f12d81525573a647e039e6ff77c3b53905953982de6f61645a28ed0b6",
+    "target": "src/feature_information_dynamics/native/data/train_lib_mask_patch.py",
+    "target_sha256": "f652a1975fcd4460d34afd8e8d04eda3edd470bce2fff9a476e178b096571768",
+    "calculation_ast_equal": true,
+    "changes": [
+      "qualified local imports",
+      "removed standalone private demo",
+      "portable example paths"
+    ]
+  },
+  {
+    "source": "did_q01/scripts/eval_lib_mmse.py",
+    "source_sha256": "df304876c327f96cd896f93a2a174b8bb2e4c777beba23c4fd2fda32052dd639",
+    "target": "src/feature_information_dynamics/native/eval_lib_mmse.py",
+    "target_sha256": "420fe44633788a5801cfcae32a85d2fd511e0b65ab10d10dc5d167c0109671db",
+    "calculation_ast_equal": true,
+    "changes": [
+      "qualified local imports",
+      "removed standalone private demo",
+      "portable example paths",
+      "corrected documentation only; calculation unchanged"
+    ]
+  }
+]

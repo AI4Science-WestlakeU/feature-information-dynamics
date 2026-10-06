@@ -1,0 +1,43 @@
+{
+  "upstream_url": "https://github.com/LTH14/JiT",
+  "upstream_commit": "cbc743a2ada5e9762697da2c83f8c4f8379e8c17",
+  "audit_date": "2026-10-06",
+  "comparison": "Read-only remote inspection confirmed identical commit and working file SHA256 values.",
+  "patch": "patches/upstream/jit.patch",
+  "patch_sha256": "1902faf183982399877cddd124335d1ad2147deebd14b7a427d6fa8fa9946e6f",
+  "modified_files": [
+    "model_jit.py"
+  ],
+  "files": {
+    "model_jit.py": {
+      "working_sha256": "7f75f076aa57076cd956ac45db78485cbea93864e7fb41f2b696908b1e7bb5c6",
+      "upstream_blob": "d2f53abca0a1788439f380b4fce115cc38c415e2",
+      "working_blob": "0d3fe19d368939ac339e070919843a07157dc02d"
+    },
+    "util/model_util.py": {
+      "working_sha256": "f4f35cc86a41b374d9e3654c8a2cddc12fbb11d41a28d24f05cf667c008b912e",
+      "upstream_blob": "f772c134d9dd6400d9c99553e093a1db9ce09fdf",
+      "working_blob": "f772c134d9dd6400d9c99553e093a1db9ce09fdf"
+    }
+  },
+  "native_imports": [
+    "model_jit.py",
+    "util/model_util.py"
+  ],
+  "required_packages": [
+    "torch",
+    "numpy",
+    "einops"
+  ],
+  "preserved_changes": [
+    "PyTorch scaled_dot_product_attention replaces upstream handwritten attention.",
+    "Native constructor condition-channel extensions and checkpoint adaptation helper retained exactly."
+  ],
+  "unused_legacy_patch_files": [
+    "denoiser.py",
+    "engine_jit.py",
+    "main_jit.py"
+  ],
+  "condition_injection": "Public FiLM backend targets trailing spatial tokens; native input-channel flags remain disabled.",
+  "verification": "git -c core.autocrlf=false apply --check and patch replay succeeded; resulting model_jit.py SHA256 exactly matches the local and remote executed source. No GPU forward or training execution."
+}

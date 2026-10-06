@@ -1,0 +1,50 @@
+# Historical executed recipe; replace resource paths, retain scientific settings.
+resources:
+  jit_source: YOUR_PATH/JiT
+
+# Pixel/JiT-L/16 mask production: chained from warmup prod best ep3.
+# Raw image + sharded mask/canny pipeline. val every 3 ep, early-stop patience=2 after min_ep=6.
+
+ckpt_path: "YOUR_PATH/jit/checkpoint-last.pth"
+
+data:
+  data_path: "YOUR_PATH/imagenet"
+  fid_reference_file: 'path/to/your/VIRTUAL_imagenet256_labeled.npz'
+  image_size: 256
+  num_classes: 1000  # JiT LabelEmbedder always +1 → 1001 slots (matches paper ckpt); 1001 here would build 1002 slots
+  num_workers: 8
+  paired_train_whitelist: "YOUR_PATH/paired_train_whitelist.json"
+  paired_val_whitelist: "YOUR_PATH/paired_val_whitelist.json"
+  mask_shard_dir: "YOUR_PATH/mask_shards"
+  canny_shard_dir: "YOUR_PATH/canny_shards"
+  phase: "mask"
+
+model:
+  class_dropout_prob: 0.0  # Keep class conditioning throughout this stage.
+  use_checkpoint: false
+
+train:
+  max_steps: 32100
+  global_batch_size: 1024
+  global_seed: 0
+  output_dir: "runs/pixel_mask"
+  exp_name: "m06_pixel_mask_prod"
+  ckpt: null
+  weight_init: "YOUR_PATH/pixel_warmup/checkpoints/best.pt"  # Historical parent: warmup best epoch 3.
+  log_every: 100
+  val_seed: 12345
+  val_n_batches: 8
+  val_every_n_epochs: 3
+  early_stop_patience: 2
+  early_stop_min_epochs: 6
+
+optimizer:
+  lr: 0.0001
+  beta2: 0.95
+
+transport:
+  path_type: Linear
+  prediction: velocity
+  loss_weight: null
+  sample_eps: null
+  train_eps: null

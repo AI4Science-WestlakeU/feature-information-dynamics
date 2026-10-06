@@ -1,0 +1,57 @@
+# May online Canny FiLM launch: initialized from the online mask checkpoint.
+# Online SDVAE uses raw image data and native sampled posterior times 0.18215; no z-score.
+
+ckpt_path: ""
+
+data:
+  data_path: ""
+  fid_reference_file: ""
+  image_size: 256
+  num_classes: 1001
+  num_workers: 8
+  latent_norm: false
+  latent_multiplier: 1.0
+  paired_train_whitelist: ""
+  paired_val_whitelist: ""
+  dataset_class: "sharded_mask_canny"
+  phase: "canny_mask"
+  imagenet_root: ""
+  vae_path: ""
+  mask_shard_dir: ""
+  canny_shard_dir: ""
+
+vae:
+  model_name: 'sdvae_f8d4'
+  downsample_ratio: 8
+
+model:
+  in_chans: 4
+  class_dropout_prob: 0.0
+  use_checkpoint: false
+  learn_sigma: true
+
+train:
+  max_steps: 64200
+  global_batch_size: 256
+  global_seed: 0
+  output_dir: ""
+  exp_name: "m06_sdvae_canny_prod"
+  ckpt: null
+  weight_init: ""
+  log_every: 100
+  val_seed: 12345
+  val_n_batches: 32
+  val_every_n_epochs: 3
+  early_stop_patience: 8
+  early_stop_min_epochs: 15
+
+optimizer:
+  lr: 0.0001
+  beta2: 0.95
+
+transport:
+  path_type: Linear
+  prediction: velocity
+  loss_weight: null
+  sample_eps: null
+  train_eps: null
