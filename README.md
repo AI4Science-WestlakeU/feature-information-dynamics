@@ -1,4 +1,4 @@
-## Feature Information Dynamics in Diffusion<br><sub>Official PyTorch implementation of the NeurIPS 2026 paper</sub>
+# Feature Information Dynamics in Diffusion<br><sub>Official PyTorch implementation of the NeurIPS 2026 paper</sub>
 
 ![Figure 1: Pixel-space example of chained feature information dynamics](docs/readme/figure-1-pixel.png)
 
