@@ -19,7 +19,9 @@ python -m pip install -e ".[mnist]"
 
 ## Getting started
 
-The [MNIST notebook](mnist_information_concepts.ipynb) teaches **feature information dynamics**. Recorded CPU execution: **8–18 seconds**, excluding the first data download.
+![MNIST digit 3: denoising and feature information dynamics](docs/readme/mnist-information-dynamics.gif)
+
+For a crash course in **feature information dynamics**, visit the [project page](https://panjiashu.github.io/feature-information-dynamics/). Explore the corresponding implementation in the [MNIST notebook](mnist_information_concepts.ipynb). Recorded CPU execution: **8–18 seconds**, excluding the first data download.
 
 ## Feature information dynamics across representations
 
@@ -28,3 +30,16 @@ The [MNIST notebook](mnist_information_concepts.ipynb) teaches **feature informa
 ## License
 
 Project-specific code is [MIT licensed](LICENSE). Upstream notices are retained in [THIRD_PARTY_NOTICES.md](THIRD_PARTY_NOTICES.md).
+## Citation
+
+```bibtex
+@misc{pan2026featureinformationdynamicsdiffusion,
+  title={Feature Information Dynamics in Diffusion},
+  author={Jia-Shu Pan and Tao Zhang and Yufei Huang and Yanjun Sheng and Tailin Wu},
+  year={2026},
+  eprint={2610.08626},
+  archivePrefix={arXiv},
+  primaryClass={stat.ML},
+  url={https://arxiv.org/abs/2610.08626}
+}
+```
