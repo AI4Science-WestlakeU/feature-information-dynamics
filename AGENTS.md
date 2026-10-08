@@ -21,3 +21,12 @@ paper's spectral MNIST experiment. Legacy results are not the unified remeasurem
 Run numeric tests and the relevant executable workflow after changing it. Record
 hardware, configurations, hashes, and limitations in docs/validation.md. Training
 budgets are finite; do not automatically restart the old project's L experiments.
+
+## Workspace ownership
+
+This directory is the only active code checkout and tracks the public GitHub repository.
+Do not create a parallel publication checkout. Project-page prose, language controls,
+HTML and web assets belong to the personal website repository. Link to the hosted page;
+do not restore an HTML template or generated project page here. Use the site's canonical
+index.html for previews and README GIF generation. Historical local archives are recovery
+material, never a source to copy wholesale over current work.

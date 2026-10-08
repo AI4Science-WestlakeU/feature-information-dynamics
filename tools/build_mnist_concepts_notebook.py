@@ -20,7 +20,7 @@ def code(text, hidden=False):
 md(r'''
 # From the project page to the code: a gentle MNIST guide
 
-On the [project page](docs/project/index.html#dynamics), the MNIST demo turns two
+On the [project page](https://panjiashu.github.io/feature-information-dynamics/#dynamics), the MNIST demo turns two
 denoising losses into a picture of **when digit identity becomes visible**. This
 notebook walks through the implementation of its four plots:
 

@@ -1,3 +1,0 @@
-KaTeX 0.16.22
-https://github.com/KaTeX/KaTeX/releases/tag/v0.16.22
-Downloaded from official katex.zip release. Distributed under the MIT license (LICENSE).

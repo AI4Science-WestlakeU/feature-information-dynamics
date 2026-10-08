@@ -60,7 +60,6 @@ def prepare_digit(digit=7, example=0, levels=None):
 
 preview_dir = ROOT / "runs/mnist_webpage"
 preview_dir.mkdir(parents=True, exist_ok=True)
-import runpy
 visual_grid = np.linspace(-2, 2, 10)
 samples = [prepare_digit(digit, EXAMPLE if digit == DIGIT else 0)
            for digit in dict.fromkeys((7, 3, 8, DIGIT))]
@@ -84,6 +83,5 @@ np.savez_compressed(preview_dir / "preview_data.npz", visual_grid=visual_grid,
     interactive_levels=interactive_levels,
     interactive_frames=np.stack([s["frames"] for s in interactive_samples]),
     stage_frames=np.stack([s["frames"][stage_indices] for s in interactive_samples]))
-runpy.run_path(str(ROOT / "tools" / "render_mnist_preview.py"),
-               init_globals={"ROOT": ROOT, "DISPLAY_DIGIT": DIGIT, "SHOW_FIGURES": False}, run_name="__main__")
+print(f"Exported measured MNIST display arrays to {preview_dir / 'preview_data.npz'}")
 
